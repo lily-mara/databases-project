@@ -108,9 +108,6 @@ CREATE TABLE GAME_CATEGORY
   FOREIGN KEY (Game_id) REFERENCES GAME(Id)
 );
 
-UPDATE USER SET Credit_card=NULL WHERE Credit_card='NULL';
-UPDATE USER SET Phone=NULL WHERE Phone='NULL';
-
 .mode csv
 .import initial-data/game.csv game
 .import initial-data/user_group.csv user_group
@@ -121,3 +118,6 @@ UPDATE USER SET Phone=NULL WHERE Phone='NULL';
 .import initial-data/develops.csv develops
 .import initial-data/friend.csv friend
 .import initial-data/game_category.csv game_category
+
+UPDATE USER SET Credit_card=NULL WHERE Credit_card='NULL';
+UPDATE USER SET Phone=NULL WHERE Phone='NULL';
