@@ -2,13 +2,11 @@ CREATE TABLE USER
 (
   Real_name VARCHAR(50) NOT NULL,
   Profile_name VARCHAR(25) NOT NULL,
-  Credit_card CHAR(16) NOT NULL,
+  Credit_card CHAR(16),
   Level INT NOT NULL,
-  Phone CHAR(10) NOT NULL,
+  Phone CHAR(10),
   Id INT NOT NULL,
-  PRIMARY KEY (Id),
-  CONSTRAINT chk_CC CHECK (Credit_card LIKE      '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
-  CONSTRAINT chk_Phone CHECK (Phone LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+  PRIMARY KEY (Id)
 );
 
 CREATE TABLE GAME
@@ -52,7 +50,7 @@ CREATE TABLE FRIEND
   FOREIGN KEY (User1) REFERENCES USER(Id),
   FOREIGN KEY (User2) REFERENCES USER(Id),
   CONSTRAINT chk_CantFriendSelf CHECK(User1 <> User2),
-  CONSTRAINT chk_User1HasLowerId CHECK(User1 < User2),
+  CONSTRAINT chk_User1HasLowerId CHECK(User1 < User2)
 );
 
 CREATE TABLE MEMBERSHIP
