@@ -116,3 +116,4 @@ CREATE TABLE GAME_CATEGORY
 .import initial-data/category.csv category
 .import initial-data/develops.csv develops
 .import initial-data/friend.csv friend
+.import initial-data/game_category.csv game_category
