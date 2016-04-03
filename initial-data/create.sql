@@ -6,7 +6,8 @@ CREATE TABLE USER
   Level INT NOT NULL,
   Phone CHAR(10),
   Id INT NOT NULL,
-  PRIMARY KEY (Id)
+  PRIMARY KEY (Id),
+  CONSTRAINT chk_LevelNotLowerThan1 CHECK(Level > 0)
 );
 
 CREATE TABLE GAME
