@@ -106,12 +106,11 @@ CREATE TABLE GAME_CATEGORY
 );
 
 .mode csv
-.import initial-datagame.csv game
-.import initial-datauser_group.csv user_group
-.import initial-datadeveloper.csv developer
-.import initial-datamembership.csv membership
-.import initial-datauser.csv user
-.import initial-datacategory.csv category
-.import initial-datadevelops.csv develops
-.import initial-data/create.sql
-.import initial-datafriend.csv friend
+.import initial-data/game.csv game
+.import initial-data/user_group.csv user_group
+.import initial-data/developer.csv developer
+.import initial-data/membership.csv membership
+.import initial-data/user.csv user
+.import initial-data/category.csv category
+.import initial-data/develops.csv develops
+.import initial-data/friend.csv friend
