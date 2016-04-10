@@ -121,6 +121,8 @@ CREATE TABLE GAME_CATEGORY
 .import initial-data/game_category.csv game_category
 .import initial-data/user_review.csv user_review
 .import initial-data/critic_review.csv critic_review
+.import initial-data/owns.csv owns
+
 
 UPDATE USER SET Credit_card=NULL WHERE Credit_card='NULL';
 UPDATE USER SET Phone=NULL WHERE Phone='NULL';
