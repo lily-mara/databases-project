@@ -9,7 +9,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Main {
+
+    static DatabaseFrame dbFrame;
+
     public static void main(String[] args) {
+        dbFrame = new DatabaseFrame();
         // load the sqlite-JDBC driver using the current class loader
         try {
             Class.forName("org.sqlite.JDBC");
