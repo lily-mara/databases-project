@@ -3,7 +3,7 @@ import java.util.List;
 /**
  * Created by nate on 4/10/16.
  */
-public class User {
+public class User extends Model {
     public String realName;
     public String profileName;
     public String creditCard;
