@@ -12,6 +12,6 @@ public class UserReview extends Model implements Review {
     }
 
     public String getText() {
-
+        return text;
     }
 }
