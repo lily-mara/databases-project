@@ -1,3 +1,4 @@
+-- noinspection SqlNoDataSourceInspectionForFile
 CREATE TABLE USER
 (
   Real_name VARCHAR(50) NOT NULL,
