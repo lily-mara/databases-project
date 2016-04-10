@@ -20,6 +20,11 @@ public class Main {
         g.name = "Brink";
         g.price = (float)19.99;
 
-        System.out.println(g.reviews());
+        System.out.println(g.categories());
+
+        Object rowData[][] = {{"1", "2", "3"},
+                {"4", "5", "6"}};
+        Object columns[] = {"col1", "col2", "col3"};
+        dbFrame.replaceTable(rowData, columns);
     }
 }
