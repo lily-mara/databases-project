@@ -6,7 +6,7 @@ import java.sql.SQLException;
  * Created by nate on 4/10/16.
  */
 public abstract class Model {
-    private Connection c;
+    protected Connection c;
 
     public Model() {
         try {
