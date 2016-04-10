@@ -1,4 +1,3 @@
-Game_id,User_id,Rating,Text
 1,1,10,"I found this game to be thoroughly enjoyable. Its fast-paced run-and-gun play style and its unique and genre-defining art style, prove brink's strengths as a revolutionary contribution to the gaming world."
 2,2,4,"Civilization 5 is the fifth installment of Firaxis game's series “Civilization”. Just like it's predicessors, Civ 5 is an embarrassingly terrible turn-based strategy game with unintuitive controls and difficult to learn key bindings. As the player attempts to make sense of the world they find themselves in, the game's AI collaborate for your demise, feeding Mahatma Ghandi's nuclear ambitions."
 3,3,7,It's an alright shooter.
@@ -11,3 +10,5 @@ Game_id,User_id,Rating,Text
 10,10,8,"Dota 2 is a free, multiplayer game by the valve corporation. It's meh."
 1,3,10,Half-life II is my favorite game.
 1,4,7,"I love Valve and everything they make, this game was a little buggy for me though."
+
+
