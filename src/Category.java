@@ -4,4 +4,9 @@
 public class Category extends Model {
     public int id;
     public String name;
+
+    @Override
+    public String toString() {
+        return String.format("[Category %d: %s]", id, name);
+    }
 }
