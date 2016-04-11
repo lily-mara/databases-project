@@ -7,7 +7,7 @@ public class TableInfo {
     public Object rowData[][];
     public String columns[];
 
-    public TableInfo(List<Model> models) {
+    public TableInfo(List<?> models) {
         if(models.get(0) instanceof User) {
             setupUser((List<User>)(List<?>) models);
         }
