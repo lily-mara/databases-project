@@ -11,6 +11,7 @@ public class Game extends Model {
     public float price;
 
     public static List<Game> getAllGames() {
+        List<Game> games = new ArrayList<Game>();
         Connection c;
         try {
             c = DriverManager.getConnection("jdbc:sqlite:data.db");
@@ -19,7 +20,6 @@ public class Game extends Model {
                     "SELECT id, name, price from game"
             );
             ResultSet rs = s.executeQuery();
-            List<Game> games = new ArrayList<Game>();
             Game g;
             while (rs.next()) {         // read the result set
                 g = new Game();
@@ -29,13 +29,11 @@ public class Game extends Model {
 
                 games.add(g);
             }
-            return games;
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
-
+        return games;
     }
 
     public List<Category> categories() {
