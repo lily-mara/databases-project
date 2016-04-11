@@ -15,27 +15,28 @@ public class User extends Model {
     public int id;
 
     public List<Game> games() {
-        List gameList = new ArrayList<Game>();
-        Game currentGame = new Game();
+        List<Game> games = new ArrayList<Game>();
 
         try {
-            Statement statement = c.createStatement();
-            statement.setQueryTimeout(30);  // set timeout to 30 sec.
-
-            ResultSet rs = statement.executeQuery("SELECT Id, Name, Price FROM GAME JOIN OWNS ON Id = Game_id WHERE User_id = " + id );
-
+            PreparedStatement s = c.prepareStatement(
+                    "SELECT Game.id, name, price FROM GAME JOIN OWNS ON Game.Id = Game_id JOIN USER ON User.Id = User_id WHERE USER.Id=?"
+            );
+            s.setInt(1, id);
+            ResultSet rs = s.executeQuery();
+            Game g;
             while (rs.next()) {         // read the result set
-                currentGame.id = rs.getInt("id");
-                currentGame.name = rs.getString("name");
-                currentGame.price = rs.getFloat("price");
+                g = new Game();
+                g.id = rs.getInt("id");
+                g.name = rs.getString("name");
+                g.price = rs.getFloat("price");//This probably isn't needed
 
-                gameList.add(currentGame);
+                games.add(g);
             }
-        }catch(SQLException e){
-            System.err.println(e);
-        }
 
-        return gameList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return games;
     }
 
     public static User getUserByProfileName(String profileName) {
@@ -69,18 +70,23 @@ public class User extends Model {
 
     public List<User> friends() {
         List friendList = new ArrayList<User>();
-        User currentUser = new User();
+        User currentUser;
 
         try {
             Statement statement = c.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-            ResultSet rs = statement.executeQuery("SELECT Real_name, Profile_name, Credit_card, Level, Phone, Id FROM FRIEND JOIN USER WHERE User1 = " + id + " OR User2 = " + id);
+            PreparedStatement s = c.prepareStatement("SELECT DISTINCT Real_name, Profile_name, Credit_card, Level, Phone, Id FROM FRIEND JOIN USER ON User1 = Id WHERE User2=?" +
+                    " UNION SELECT DISTINCT Real_name, Profile_name, Credit_card, Level, Phone, Id FROM FRIEND JOIN USER ON User2 = Id WHERE User1=?");
+            s.setInt(1, id);
+            s.setInt(2, id);
+            ResultSet rs = s.executeQuery();
 
             while (rs.next()) {         // read the result set
+                currentUser = new User();
                 currentUser.realName = rs.getString("real_name");
                 currentUser.profileName = rs.getString("profile_name");
-                currentUser.creditCard = rs.getString("credit_card");
+                currentUser.creditCard = rs.getString("credit_card"); //Shouldn't be here
                 currentUser.level = rs.getInt("level");
                 currentUser.phone = rs.getString("phone");
                 currentUser.id = rs.getInt("id");
@@ -142,14 +148,14 @@ public class User extends Model {
         return reviewList;
     }
 
-    public List<User> all(){
+    public static List<User> all(){
         List userList = new ArrayList<User>();
-
+        Connection c;
         try {
-            Statement statement = c.createStatement();
-            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+            c = DriverManager.getConnection("jdbc:sqlite:data.db");
 
-            ResultSet rs = statement.executeQuery("SELECT * FROM USER");
+            PreparedStatement s = c.prepareStatement("SELECT * FROM USER");
+            ResultSet rs = s.executeQuery();
 
             while (rs.next()) {         // read the result set
                 User currentUser = new User();
@@ -168,4 +174,5 @@ public class User extends Model {
 
         return userList;
     }
+
 }
