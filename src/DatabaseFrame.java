@@ -19,8 +19,6 @@ public class DatabaseFrame{
     private JComboBox dropdown;
     private JTabbedPane userScreen;
 
-    private final static int extraWindowWidth = 100;
-
     public DatabaseFrame() {
         frame = new JFrame("Database Frame");
         panel = new JPanel();
@@ -39,10 +37,6 @@ public class DatabaseFrame{
         frame.setBackground(Color.WHITE);
 
         // Add things to panel
-        //panel.add(descriptionLabel);
-        //panel.add(dropdown);
-        //panel.add(goButton);
-        //panel.add(new JScrollPane(table));
         panel.add(userScreen);
         panel.add(loginScreen);
 
@@ -56,10 +50,15 @@ public class DatabaseFrame{
     private void createLoginScreen() {
         loginScreen = new JPanel();
 
+        // Create Labels
         JLabel userLabel = new JLabel("Uesrname:");
         JLabel passLabel = new JLabel("Password:");
+
+        // Create Inputs
         JTextField userNameInput = new JTextField(15);
         JPasswordField passInput = new JPasswordField(15);
+
+        // Button Functionality
         JButton loginButton = new JButton("Login");
         loginButton.addActionListener(new ActionListener() {
             @Override
