@@ -1,6 +1,7 @@
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,5 +92,29 @@ public class Game extends Model {
             e.printStackTrace();
             return null;
         }
+    }
+
+        public List<Game> all(){
+        List gameList = new ArrayList<Game>();
+        Game currentGame = new Game();
+
+        try {
+            Statement statement = c.createStatement();
+            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+            ResultSet rs = statement.executeQuery("SELECT * FROM GAME");
+
+            while (rs.next()) {         // read the result set
+                currentGame.name = rs.getString("Name");
+                currentGame.id = rs.getInt("Id");
+                currentGame.price = rs.getFloat("Price");
+
+                gameList.add(currentGame);
+            }
+        }catch(SQLException e){
+            System.err.println(e);
+        }
+
+        return gameList;
     }
 }
