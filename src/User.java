@@ -117,7 +117,6 @@ public class User extends Model {
 
     public List<User> all(){
         List userList = new ArrayList<User>();
-        User currentUser = new User();
 
         try {
             Statement statement = c.createStatement();
@@ -126,6 +125,7 @@ public class User extends Model {
             ResultSet rs = statement.executeQuery("SELECT * FROM USER");
 
             while (rs.next()) {         // read the result set
+                User currentUser = new User();
                 currentUser.realName = rs.getString("real_name");
                 currentUser.profileName = rs.getString("profile_name");
                 currentUser.creditCard = rs.getString("credit_card");

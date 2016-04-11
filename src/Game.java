@@ -96,7 +96,6 @@ public class Game extends Model {
 
         public List<Game> all(){
         List gameList = new ArrayList<Game>();
-        Game currentGame = new Game();
 
         try {
             Statement statement = c.createStatement();
@@ -105,6 +104,7 @@ public class Game extends Model {
             ResultSet rs = statement.executeQuery("SELECT * FROM GAME");
 
             while (rs.next()) {         // read the result set
+                Game currentGame = new Game();
                 currentGame.name = rs.getString("Name");
                 currentGame.id = rs.getInt("Id");
                 currentGame.price = rs.getFloat("Price");

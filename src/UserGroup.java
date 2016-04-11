@@ -17,7 +17,6 @@ public class UserGroup extends Model {
 
     public List<UserGroup> all(){
         List userGroupList = new ArrayList<UserGroup>();
-        UserGroup currentUserGroup = new UserGroup();
 
         try {
             Statement statement = c.createStatement();
@@ -26,6 +25,7 @@ public class UserGroup extends Model {
             ResultSet rs = statement.executeQuery("SELECT * FROM GAME");
 
             while (rs.next()) {         // read the result set
+                UserGroup currentUserGroup = new UserGroup();
                 currentUserGroup.name = rs.getString("Name");
                 currentUserGroup.id = rs.getInt("Id");
 
