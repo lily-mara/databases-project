@@ -1,8 +1,6 @@
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 
 /**
@@ -42,18 +40,23 @@ public class User extends Model {
 
     public List<User> friends() {
         List friendList = new ArrayList<User>();
-        User currentUser = new User();
+        User currentUser;
 
         try {
             Statement statement = c.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-            ResultSet rs = statement.executeQuery("SELECT Real_name, Profile_name, Credit_card, Level, Phone, Id FROM FRIEND JOIN USER WHERE User1 = " + id + " OR User2 = " + id);
+            PreparedStatement s = c.prepareStatement("SELECT DISTINCT Real_name, Profile_name, Credit_card, Level, Phone, Id FROM FRIEND JOIN USER ON User1 = Id WHERE User2=?" +
+                    " UNION SELECT DISTINCT Real_name, Profile_name, Credit_card, Level, Phone, Id FROM FRIEND JOIN USER ON User2 = Id WHERE User1=?");
+            s.setInt(1, id);
+            s.setInt(2, id);
+            ResultSet rs = s.executeQuery();
 
             while (rs.next()) {         // read the result set
+                currentUser = new User();
                 currentUser.realName = rs.getString("real_name");
                 currentUser.profileName = rs.getString("profile_name");
-                currentUser.creditCard = rs.getString("credit_card");
+                currentUser.creditCard = rs.getString("credit_card"); //Shouldn't be here
                 currentUser.level = rs.getInt("level");
                 currentUser.phone = rs.getString("phone");
                 currentUser.id = rs.getInt("id");
@@ -115,7 +118,7 @@ public class User extends Model {
         return reviewList;
     }
 
-    public List<User> all(){
+    public static List<User> all(){
         List userList = new ArrayList<User>();
 
         try {
@@ -140,5 +143,32 @@ public class User extends Model {
         }
 
         return userList;
+    }
+
+    public List<Game> getOwnedGames() {
+        List<Game> games = new ArrayList<Game>();
+        Connection c;
+        try {
+            c = DriverManager.getConnection("jdbc:sqlite:data.db");
+
+            PreparedStatement s = c.prepareStatement(
+                    "SELECT Game.id, name, price FROM GAME JOIN OWNS ON Game.Id = Game_id JOIN USER ON User.Id = User_id WHERE USER.Id=?"
+            );
+            s.setInt(1, id);
+            ResultSet rs = s.executeQuery();
+            Game g;
+            while (rs.next()) {         // read the result set
+                g = new Game();
+                g.id = rs.getInt("id");
+                g.name = rs.getString("name");
+                g.price = rs.getFloat("price");//This probably isn't needed
+
+                games.add(g);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return games;
     }
 }
