@@ -1,8 +1,6 @@
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 
 /**
@@ -38,6 +36,35 @@ public class User extends Model {
         }
 
         return gameList;
+    }
+
+    public static User getUserByProfileName(String profileName) {
+        Connection c;
+        try {
+            c = DriverManager.getConnection("jdbc:sqlite:data.db");
+
+            PreparedStatement s = c.prepareStatement(
+                    "select real_name, profile_name, credit_card, level, phone, id from user where profile_name=?"
+            );
+            ResultSet rs = s.executeQuery();
+
+            if (rs.next()) {
+                User u = new User();
+                u.id = rs.getInt("id");
+                u.realName = rs.getString("real_name");
+                u.profileName = rs.getString("profile_name");
+                u.creditCard = rs.getString("credit_card");
+                u.level = rs.getInt("level");
+                u.phone = rs.getString("phone");
+                return u;
+            } else {
+                return null;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public List<User> friends() {
