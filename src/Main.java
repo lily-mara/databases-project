@@ -1,3 +1,5 @@
+import java.util.List;
+
 /**
  * Created by loomisdf on 4/10/2016.
  */
@@ -21,10 +23,8 @@ public class Main {
         g.price = (float)19.99;
 
         System.out.println(g.categories());
+        TableInfo t = new TableInfo((List<Model>)(List<?>)g.categories());
 
-        Object rowData[][] = {{"1", "2", "3"},
-                {"4", "5", "6"}};
-        Object columns[] = {"col1", "col2", "col3"};
-        dbFrame.replaceTable(rowData, columns);
+        dbFrame.replaceTable(t.rowData, t.columns);
     }
 }
