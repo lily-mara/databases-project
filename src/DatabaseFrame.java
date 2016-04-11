@@ -12,11 +12,12 @@ public class DatabaseFrame{
     private JFrame frame;
     private JLabel descriptionLabel;
     private JPanel panel;
+    private JPanel loginScreen;
     private JButton goButton;
     private JTable table;
     private DefaultTableModel tableModel;
     private JComboBox dropdown;
-    private JTabbedPane tabPane;
+    private JTabbedPane userScreen;
 
     private final static int extraWindowWidth = 100;
 
@@ -29,11 +30,11 @@ public class DatabaseFrame{
         createDropdown();
         createButtons();
         creteTable();
-        createTabPane();
-
+        createUserScreen();
+        createLoginScreen();
 
         // Setup JFrame
-        frame.setSize(500, 525);
+        frame.setSize(500, 550);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setBackground(Color.WHITE);
 
@@ -42,7 +43,8 @@ public class DatabaseFrame{
         //panel.add(dropdown);
         //panel.add(goButton);
         //panel.add(new JScrollPane(table));
-        panel.add(tabPane);
+        panel.add(userScreen);
+        panel.add(loginScreen);
 
         // Add panel to frame
         frame.add(panel);
@@ -51,8 +53,34 @@ public class DatabaseFrame{
         frame.setVisible(true);
     }
 
-    private void createTabPane() {
-        tabPane = new JTabbedPane();
+    private void createLoginScreen() {
+        loginScreen = new JPanel();
+
+        JLabel userLabel = new JLabel("Uesrname:");
+        JLabel passLabel = new JLabel("Password:");
+        JTextField userNameInput = new JTextField(15);
+        JPasswordField passInput = new JPasswordField(15);
+        JButton loginButton = new JButton("Login");
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loginScreen.setVisible(false);
+                userScreen.setVisible(true);
+            }
+        });
+
+        loginScreen.add(userLabel);
+        loginScreen.add(userNameInput);
+
+        loginScreen.add(passLabel);
+        loginScreen.add(passInput);
+
+        loginScreen.add(loginButton);
+        loginScreen.setLayout(new BoxLayout(loginScreen, BoxLayout.PAGE_AXIS));
+    }
+
+    private void createUserScreen() {
+        userScreen = new JTabbedPane();
         JPanel card1 = new JPanel();
 
         JPanel optionPanel = new JPanel();
@@ -69,8 +97,10 @@ public class DatabaseFrame{
         JPanel card2 = new JPanel();
         card2.add(new JLabel("User Page"));
 
-        tabPane.addTab("Store", card1);
-        tabPane.addTab("User Page", card2);
+        userScreen.addTab("Store", card1);
+        userScreen.addTab("User Page", card2);
+
+        userScreen.setVisible(false);
     }
 
     private void createDropdown() {
