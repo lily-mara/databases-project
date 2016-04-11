@@ -14,6 +14,7 @@ public class DatabaseFrame{
     private JPanel panel;
     private JPanel loginScreen;
     private JButton goButton;
+    private JButton purchaseButton;
     private JTable table;
     private DefaultTableModel tableModel;
     private JComboBox dropdown;
@@ -101,6 +102,7 @@ public class DatabaseFrame{
         optionPanel.add(descriptionLabel);
         optionPanel.add(dropdown);
         optionPanel.add(goButton);
+        optionPanel.add(purchaseButton);
         optionPanel.setLayout(new FlowLayout());
 
         card1.add(optionPanel);
@@ -167,5 +169,17 @@ public class DatabaseFrame{
                 }
             }
         });
+
+        purchaseButton = new JButton("Purchase");
+        purchaseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = table.getSelectedRow();
+                int GameId = (int)table.getValueAt(row,1);
+                currentUser.purchaseGame(GameId);
+                //Add feedback
+            }
+        });
+
     }
 }
