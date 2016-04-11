@@ -23,7 +23,7 @@ public class Main {
         g.price = (float)19.99;
 
         System.out.println(g.categories());
-        TableInfo t = new TableInfo((List<Model>)(List<?>)g.categories());
+        TableInfo t = new TableInfo(g.categories());
 
         dbFrame.replaceTable(t.rowData, t.columns);
     }

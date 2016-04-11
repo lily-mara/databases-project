@@ -16,13 +16,6 @@ public class DatabaseFrame{
     JTable table;
     DefaultTableModel tableModel;
 
-    static ActionListener buttonListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            System.out.println("Get all games");
-        }
-    };
-
     public DatabaseFrame() {
         frame = new JFrame("Database Frame");
         panel = new JPanel();
@@ -30,7 +23,13 @@ public class DatabaseFrame{
         createButtons();
         creteTable();
 
-        getAllGames.addActionListener(buttonListener);
+        getAllGames.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TableInfo t = new TableInfo(Game.getAllGames());
+                replaceTable(t.rowData, t.columns);
+            }
+        });
 
         frame.setSize(500, 500);
         //frame.setLayout(new FlowLayout());

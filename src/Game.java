@@ -1,6 +1,4 @@
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +9,34 @@ public class Game extends Model {
     public int id;
     public String name;
     public float price;
+
+    public static List<Game> getAllGames() {
+        Connection c;
+        try {
+            c = DriverManager.getConnection("jdbc:sqlite:data.db");
+
+            PreparedStatement s = c.prepareStatement(
+                    "SELECT id, name, price from game"
+            );
+            ResultSet rs = s.executeQuery();
+            List<Game> games = new ArrayList<Game>();
+            Game g;
+            while (rs.next()) {         // read the result set
+                g = new Game();
+                g.id = rs.getInt("id");
+                g.name = rs.getString("name");
+                g.price = rs.getFloat("price");
+
+                games.add(g);
+            }
+            return games;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
 
     public List<Category> categories() {
         try {
