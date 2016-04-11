@@ -12,24 +12,20 @@ public class DatabaseFrame{
     JFrame frame;
     JLabel descriptionLabel;
     JPanel panel;
-    JButton getAllGames;
+    JButton goButton;
     JTable table;
     DefaultTableModel tableModel;
+    JComboBox dropdown;
 
     public DatabaseFrame() {
         frame = new JFrame("Database Frame");
         panel = new JPanel();
         descriptionLabel = new JLabel("Welcome to the DB");
+        createDropdown();
         createButtons();
         creteTable();
 
-        getAllGames.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TableInfo t = new TableInfo(Game.getAllGames());
-                replaceTable(t.rowData, t.columns);
-            }
-        });
+
 
         frame.setSize(500, 500);
         //frame.setLayout(new FlowLayout());
@@ -37,11 +33,17 @@ public class DatabaseFrame{
         frame.setBackground(Color.WHITE);
 
         panel.add(descriptionLabel);
-        panel.add(getAllGames);
+        panel.add(dropdown);
+        panel.add(goButton);
         panel.add(new JScrollPane(table));
         frame.add(panel);
 
         frame.setVisible(true);
+    }
+
+    private void createDropdown() {
+        String[] options = {"Show All Games","User Page","Show All Categories"};
+        dropdown = new JComboBox(options);
     }
 
     private void creteTable() {
@@ -67,7 +69,25 @@ public class DatabaseFrame{
     }
 
     private void createButtons() {
-        getAllGames = new JButton("Get Games");
+        goButton = new JButton("Go!");
+        goButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String operation = (String) dropdown.getSelectedItem();
+                switch(operation) {
+                    case("Show All Games"): {
+                        TableInfo t = new TableInfo(Game.getAllGames());
+                        replaceTable(t.rowData, t.columns);
+                        break;
+                    }
+                    case("Show All Categories") : {
+                        TableInfo t = new TableInfo(Category.getAllCategories());
+                        replaceTable(t.rowData, t.columns);
+                        break;
+                    }
 
+                }
+            }
+        });
     }
 }
