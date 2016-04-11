@@ -174,5 +174,26 @@ public class User extends Model {
 
         return userList;
     }
+    public boolean purchaseGame( int GameId ){
+        //Need to check for credit card/ownership
+        if(creditCard == null)
+            return false;
 
+        try {
+            c = DriverManager.getConnection("jdbc:sqlite:data.db");
+
+            PreparedStatement s = c.prepareStatement("INSERT INTO OWNS VALUES(?,?)");
+            s.setInt(1, GameId);
+            s.setInt(2, id);
+            if( s.execute() )
+                return true;
+            else
+                return false;
+
+        }catch(SQLException e){
+            System.err.println(e);
+        }
+
+        return false;
+    }
 }
