@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 public class DatabaseFrame{
 
     private JFrame frame;
-    private JLabel descriptionLabel;
+    private JLabel descriptionLabel, userGreeting;
     private JPanel panel;
     private JPanel loginScreen;
     private JButton goButton;
@@ -18,6 +18,8 @@ public class DatabaseFrame{
     private DefaultTableModel tableModel;
     private JComboBox dropdown;
     private JTabbedPane userScreen;
+
+    private User currentUser;
 
     public DatabaseFrame() {
         frame = new JFrame("Database Frame");
@@ -53,6 +55,9 @@ public class DatabaseFrame{
         // Create Labels
         JLabel userLabel = new JLabel("Uesrname:");
         JLabel passLabel = new JLabel("Password:");
+        JLabel userNotFoundWarning = new JLabel("User not found!");
+        userNotFoundWarning.setForeground(Color.red);
+        userNotFoundWarning.setVisible(false);
 
         // Create Inputs
         JTextField userNameInput = new JTextField(15);
@@ -63,8 +68,15 @@ public class DatabaseFrame{
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                loginScreen.setVisible(false);
-                userScreen.setVisible(true);
+                currentUser = User.getUserByProfileName(userNameInput.getText());
+                if(currentUser != null) {
+                    loginScreen.setVisible(false);
+                    userGreeting.setText("Hello " + currentUser.profileName);
+                    userScreen.setVisible(true);
+                }
+                else {
+                    userNotFoundWarning.setVisible(true);
+                }
             }
         });
 
@@ -75,11 +87,14 @@ public class DatabaseFrame{
         loginScreen.add(passInput);
 
         loginScreen.add(loginButton);
+        loginScreen.add(userNotFoundWarning);
         loginScreen.setLayout(new BoxLayout(loginScreen, BoxLayout.PAGE_AXIS));
     }
 
     private void createUserScreen() {
         userScreen = new JTabbedPane();
+
+        // Store Panel
         JPanel card1 = new JPanel();
 
         JPanel optionPanel = new JPanel();
@@ -93,8 +108,10 @@ public class DatabaseFrame{
 
         card1.setLayout(new BoxLayout(card1, BoxLayout.Y_AXIS));
 
+        // User Page
         JPanel card2 = new JPanel();
-        card2.add(new JLabel("User Page"));
+        userGreeting = new JLabel("Hello Unknown User");
+        card2.add(userGreeting);
 
         userScreen.addTab("Store", card1);
         userScreen.addTab("User Page", card2);
