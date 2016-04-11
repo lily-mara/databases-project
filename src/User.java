@@ -15,27 +15,28 @@ public class User extends Model {
     public int id;
 
     public List<Game> games() {
-        List gameList = new ArrayList<Game>();
-        Game currentGame = new Game();
+        List<Game> games = new ArrayList<Game>();
 
         try {
-            Statement statement = c.createStatement();
-            statement.setQueryTimeout(30);  // set timeout to 30 sec.
-
-            ResultSet rs = statement.executeQuery("SELECT Id, Name, Price FROM GAME JOIN OWNS ON Id = Game_id WHERE User_id = " + id );
-
+            PreparedStatement s = c.prepareStatement(
+                    "SELECT Game.id, name, price FROM GAME JOIN OWNS ON Game.Id = Game_id JOIN USER ON User.Id = User_id WHERE USER.Id=?"
+            );
+            s.setInt(1, id);
+            ResultSet rs = s.executeQuery();
+            Game g;
             while (rs.next()) {         // read the result set
-                currentGame.id = rs.getInt("id");
-                currentGame.name = rs.getString("name");
-                currentGame.price = rs.getFloat("price");
+                g = new Game();
+                g.id = rs.getInt("id");
+                g.name = rs.getString("name");
+                g.price = rs.getFloat("price");//This probably isn't needed
 
-                gameList.add(currentGame);
+                games.add(g);
             }
-        }catch(SQLException e){
-            System.err.println(e);
-        }
 
-        return gameList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return games;
     }
 
     public List<User> friends() {
@@ -120,12 +121,12 @@ public class User extends Model {
 
     public static List<User> all(){
         List userList = new ArrayList<User>();
-
+        Connection c;
         try {
-            Statement statement = c.createStatement();
-            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+            c = DriverManager.getConnection("jdbc:sqlite:data.db");
 
-            ResultSet rs = statement.executeQuery("SELECT * FROM USER");
+            PreparedStatement s = c.prepareStatement("SELECT * FROM USER");
+            ResultSet rs = s.executeQuery();
 
             while (rs.next()) {         // read the result set
                 User currentUser = new User();
@@ -145,30 +146,4 @@ public class User extends Model {
         return userList;
     }
 
-    public List<Game> getOwnedGames() {
-        List<Game> games = new ArrayList<Game>();
-        Connection c;
-        try {
-            c = DriverManager.getConnection("jdbc:sqlite:data.db");
-
-            PreparedStatement s = c.prepareStatement(
-                    "SELECT Game.id, name, price FROM GAME JOIN OWNS ON Game.Id = Game_id JOIN USER ON User.Id = User_id WHERE USER.Id=?"
-            );
-            s.setInt(1, id);
-            ResultSet rs = s.executeQuery();
-            Game g;
-            while (rs.next()) {         // read the result set
-                g = new Game();
-                g.id = rs.getInt("id");
-                g.name = rs.getString("name");
-                g.price = rs.getFloat("price");//This probably isn't needed
-
-                games.add(g);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return games;
-    }
 }
