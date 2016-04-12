@@ -45,8 +45,9 @@ public class User extends Model {
             c = DriverManager.getConnection("jdbc:sqlite:data.db");
 
             PreparedStatement s = c.prepareStatement(
-                    "select real_name, profile_name, credit_card, level, phone, id from user where profile_name='" + profileName + "'"
+                    "select real_name, profile_name, credit_card, level, phone, id from user where profile_name=? COLLATE NOCASE"
             );
+            s.setString(1, profileName);
             ResultSet rs = s.executeQuery();
 
             if (rs.next()) {
