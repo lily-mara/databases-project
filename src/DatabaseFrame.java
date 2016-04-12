@@ -54,7 +54,7 @@ public class DatabaseFrame{
         loginScreen = new JPanel();
 
         // Create Labels
-        JLabel userLabel = new JLabel("Uesrname:");
+        JLabel userLabel = new JLabel("Username:");
         JLabel passLabel = new JLabel("Password:");
         JLabel userNotFoundWarning = new JLabel("User not found!");
         userNotFoundWarning.setForeground(Color.red);
@@ -158,11 +158,13 @@ public class DatabaseFrame{
                     case("Show All Games"): {
                         TableInfo t = new TableInfo(Game.getAllGames());
                         replaceTable(t.rowData, t.columns);
+                        purchaseButton.setVisible(true);
                         break;
                     }
                     case("Show All Categories") : {
                         TableInfo t = new TableInfo(Category.getAllCategories());
                         replaceTable(t.rowData, t.columns);
+                        purchaseButton.setVisible(false);
                         break;
                     }
 
@@ -170,7 +172,9 @@ public class DatabaseFrame{
             }
         });
 
+
         purchaseButton = new JButton("Purchase");
+        purchaseButton.setVisible(false);
         purchaseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
