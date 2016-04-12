@@ -19,6 +19,9 @@ public class DatabaseFrame{
     private DefaultTableModel tableModel;
     private JComboBox dropdown;
     private JTabbedPane userScreen;
+    private JButton friends;
+    private JButton ownedGames;
+    private JTable userTable;
 
     private User currentUser;
 
@@ -30,7 +33,7 @@ public class DatabaseFrame{
         // Various creation operations
         createDropdown();
         createButtons();
-        creteTable();
+        createTable();
         createUserScreen();
         createLoginScreen();
 
@@ -114,6 +117,10 @@ public class DatabaseFrame{
         JPanel card2 = new JPanel();
         userGreeting = new JLabel("Hello Unknown User");
         card2.add(userGreeting);
+        card2.add(friends);
+        card2.add(ownedGames);
+        card2.add(new JScrollPane(userTable));
+        card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
 
         userScreen.addTab("Store", card1);
         userScreen.addTab("User Page", card2);
@@ -126,14 +133,18 @@ public class DatabaseFrame{
         dropdown = new JComboBox(options);
     }
 
-    private void creteTable() {
+    private void createTable() {
         table = new JTable();
+        userTable = new JTable();
         tableModel = new DefaultTableModel(0, 0);
     }
 
-    public void replaceTable(Object rowData[][], Object columns[]) {
+    public void replaceTable(JTable cTable, Object rowData[][], Object columns[]) {
+        if(rowData == null || columns == null)
+            return;
+
         tableModel.setColumnIdentifiers(columns);
-        table.setModel(tableModel);
+        cTable.setModel(tableModel);
 
         // Remove Rows
         if (tableModel.getRowCount() > 0) {
@@ -157,14 +168,15 @@ public class DatabaseFrame{
                 switch(operation) {
                     case("Show All Games"): {
                         TableInfo t = new TableInfo(Game.getAllGames());
-                        replaceTable(t.rowData, t.columns);
+                        replaceTable(table,t.rowData, t.columns);
                         purchaseButton.setVisible(true);
                         break;
                     }
                     case("Show All Categories") : {
                         TableInfo t = new TableInfo(Category.getAllCategories());
-                        replaceTable(t.rowData, t.columns);
+                        replaceTable(table, t.rowData, t.columns);
                         purchaseButton.setVisible(false);
+                        replaceTable(table,t.rowData, t.columns);
                         break;
                     }
 
@@ -185,5 +197,22 @@ public class DatabaseFrame{
             }
         });
 
+        friends = new JButton("Friends");
+        friends.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TableInfo t = new TableInfo(currentUser.friends());
+                replaceTable(userTable, t.rowData, t.columns);
+            }
+        });
+
+        ownedGames = new JButton("My Games");
+        ownedGames.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TableInfo t = new TableInfo(currentUser.games());
+                replaceTable(userTable, t.rowData, t.columns);
+            }
+        });
     }
 }

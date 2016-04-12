@@ -8,6 +8,9 @@ public class TableInfo {
     public String columns[];
 
     public TableInfo(List<?> models) {
+        if(models.isEmpty()){
+            return;
+        }
         if(models.get(0) instanceof User) {
             setupUser((List<User>)(List<?>) models);
         }
