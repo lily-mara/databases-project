@@ -22,6 +22,7 @@ public class DatabaseFrame{
     private JButton friends;
     private JButton ownedGames;
     private JTable userTable;
+    private DefaultTableModel tableModel2;
 
     private User currentUser;
 
@@ -137,25 +138,26 @@ public class DatabaseFrame{
         table = new JTable();
         userTable = new JTable();
         tableModel = new DefaultTableModel(0, 0);
+        tableModel2 = new DefaultTableModel(0, 0);
     }
 
-    public void replaceTable(JTable cTable, Object rowData[][], Object columns[]) {
+    public void replaceTable(JTable cTable, DefaultTableModel model, Object rowData[][], Object columns[]) {
         if(rowData == null || columns == null)
             return;
 
-        tableModel.setColumnIdentifiers(columns);
-        cTable.setModel(tableModel);
+        model.setColumnIdentifiers(columns);
+        cTable.setModel(model);
 
         // Remove Rows
-        if (tableModel.getRowCount() > 0) {
-            for (int i = tableModel.getRowCount() - 1; i > -1; i--) {
-                tableModel.removeRow(i);
+        if (model.getRowCount() > 0) {
+            for (int i = model.getRowCount() - 1; i > -1; i--) {
+                model.removeRow(i);
             }
         }
 
         // Add new rows
         for(int r = 0; r < rowData.length; r++) {
-            tableModel.addRow(rowData[r]);
+            model.addRow(rowData[r]);
         }
     }
 
@@ -168,15 +170,14 @@ public class DatabaseFrame{
                 switch(operation) {
                     case("Show All Games"): {
                         TableInfo t = new TableInfo(Game.getAllGames());
-                        replaceTable(table,t.rowData, t.columns);
+                        replaceTable(table,tableModel,t.rowData, t.columns);
                         purchaseButton.setVisible(true);
                         break;
                     }
                     case("Show All Categories") : {
                         TableInfo t = new TableInfo(Category.getAllCategories());
-                        replaceTable(table, t.rowData, t.columns);
+                        replaceTable(table,tableModel, t.rowData, t.columns);
                         purchaseButton.setVisible(false);
-                        replaceTable(table,t.rowData, t.columns);
                         break;
                     }
 
@@ -202,7 +203,7 @@ public class DatabaseFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 TableInfo t = new TableInfo(currentUser.friends());
-                replaceTable(userTable, t.rowData, t.columns);
+                replaceTable(userTable, tableModel2, t.rowData, t.columns);
             }
         });
 
@@ -211,7 +212,7 @@ public class DatabaseFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 TableInfo t = new TableInfo(currentUser.games());
-                replaceTable(userTable, t.rowData, t.columns);
+                replaceTable(userTable, tableModel2, t.rowData, t.columns);
             }
         });
     }
