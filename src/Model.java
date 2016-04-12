@@ -6,7 +6,7 @@ import java.sql.SQLException;
  * Created by nate on 4/10/16.
  */
 public abstract class Model {
-    protected static Connection c = connect();
+    protected static final Connection c = connect();
 
     public Model() {
     }
