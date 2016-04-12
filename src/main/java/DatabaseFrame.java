@@ -193,7 +193,9 @@ public class DatabaseFrame{
             public void actionPerformed(ActionEvent e) {
                 int row = table.getSelectedRow();
                 int GameId = (int)table.getValueAt(row,1);
-                currentUser.purchaseGame(GameId);
+                if( !currentUser.purchaseGame(GameId) )
+                     JOptionPane.showMessageDialog(frame,
+                            "That game could not be purchased :(");
                 //Add feedback
             }
         });
@@ -209,7 +211,6 @@ public class DatabaseFrame{
                     JOptionPane.showMessageDialog(frame,
                             "You have no friends :(");
                 }
-                replaceTable(userTable, tableModel2, t.rowData, t.columns);
             }
         });
 
@@ -218,7 +219,11 @@ public class DatabaseFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 TableInfo t = new TableInfo(currentUser.games());
-                replaceTable(userTable, tableModel2, t.rowData, t.columns);
+                if (t.columns != null)
+                    replaceTable(userTable, tableModel2, t.rowData, t.columns);
+                else
+                    JOptionPane.showMessageDialog(frame,
+                            "You have no games :(");
             }
         });
     }
