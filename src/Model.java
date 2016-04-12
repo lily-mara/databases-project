@@ -6,17 +6,17 @@ import java.sql.SQLException;
  * Created by nate on 4/10/16.
  */
 public abstract class Model {
-    protected Connection c;
+    protected static Connection c = connect();
 
     public Model() {
-        try {
-            c = DriverManager.getConnection("jdbc:sqlite:data.db");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
-    public Model(Connection c) {
-        this.c = c;
+    private static Connection connect() {
+        try {
+            return DriverManager.getConnection("jdbc:sqlite:data.db");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -40,10 +40,7 @@ public class User extends Model {
     }
 
     public static User getUserByProfileName(String profileName) {
-        Connection c;
         try {
-            c = DriverManager.getConnection("jdbc:sqlite:data.db");
-
             PreparedStatement s = c.prepareStatement(
                     "select real_name, profile_name, credit_card, level, phone, id from user where profile_name=? COLLATE NOCASE"
             );
@@ -151,10 +148,7 @@ public class User extends Model {
 
     public static List<User> all(){
         List userList = new ArrayList<User>();
-        Connection c;
         try {
-            c = DriverManager.getConnection("jdbc:sqlite:data.db");
-
             PreparedStatement s = c.prepareStatement("SELECT * FROM USER");
             ResultSet rs = s.executeQuery();
 
@@ -177,12 +171,11 @@ public class User extends Model {
     }
     public boolean purchaseGame( int GameId ){
         //Need to check for credit card/ownership
-        if(creditCard == null)
+        if(creditCard == null) {
             return false;
+        }
 
         try {
-            c = DriverManager.getConnection("jdbc:sqlite:data.db");
-
             PreparedStatement s = c.prepareStatement("INSERT INTO OWNS VALUES(?,?)");
             s.setInt(1, GameId);
             s.setInt(2, id);

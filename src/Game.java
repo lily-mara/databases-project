@@ -12,10 +12,7 @@ public class Game extends Model {
 
     public static List<Game> getAllGames() {
         List<Game> games = new ArrayList<Game>();
-        Connection c;
         try {
-            c = DriverManager.getConnection("jdbc:sqlite:data.db");
-
             PreparedStatement s = c.prepareStatement(
                     "SELECT id, name, price from game"
             );

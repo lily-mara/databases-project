@@ -11,10 +11,7 @@ public class Category extends Model {
 
     public static List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<Category>();
-        Connection c;
         try {
-            c = DriverManager.getConnection("jdbc:sqlite:data.db");
-
             PreparedStatement s = c.prepareStatement(
                     "SELECT * FROM category"
             );
