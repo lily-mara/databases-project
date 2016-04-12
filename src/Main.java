@@ -16,15 +16,5 @@ public class Main {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-        Game g = new Game();
-        g.id = 1;
-        g.name = "Brink";
-        g.price = (float)19.99;
-
-        System.out.println(g.categories());
-        TableInfo t = new TableInfo(g.categories());
-
-        dbFrame.replaceTable(t.rowData, t.columns);
     }
 }
