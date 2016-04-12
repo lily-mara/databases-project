@@ -192,10 +192,12 @@ public class DatabaseFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 int row = table.getSelectedRow();
-                int GameId = (int)table.getValueAt(row,1);
-                if( !currentUser.purchaseGame(GameId) )
+                int GameId = (Integer) table.getValueAt(row,1);
+
+                ErrorCode errorCode = currentUser.purchaseGame(GameId);
+                if(errorCode.result == ErrorResult.FAIL)
                      JOptionPane.showMessageDialog(frame,
-                            "That game could not be purchased :(");
+                            errorCode.message);
                 //Add feedback
             }
         });

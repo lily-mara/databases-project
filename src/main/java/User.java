@@ -169,10 +169,10 @@ public class User extends Model {
 
         return userList;
     }
-    public boolean purchaseGame( int GameId ){
+    public ErrorCode purchaseGame( int GameId ){
         //Need to check for credit card/ownership
         if(creditCard == null) {
-            return false;
+            return new ErrorCode(ErrorResult.FAIL, "No credit card");
         }
 
         try {
@@ -180,14 +180,14 @@ public class User extends Model {
             s.setInt(1, GameId);
             s.setInt(2, id);
             if( s.execute() )
-                return true;
+                return new ErrorCode(ErrorResult.SUCCESS, "Success");
             else
-                return false;
+                return new ErrorCode(ErrorResult.FAIL, "You already own the game");
 
         }catch(SQLException e){
             System.err.println(e);
         }
 
-        return false;
+        return new ErrorCode(ErrorResult.FAIL, "You already own the game");
     }
 }
