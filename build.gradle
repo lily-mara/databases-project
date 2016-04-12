@@ -1,0 +1,34 @@
+apply plugin: 'java'
+
+buildscript {
+    repositories {
+        maven {
+            url "https://jcenter.bintray.com"
+        }
+    }
+
+    dependencies {
+        classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
+    }
+}
+
+apply plugin: 'eu.appsatori.fatjar'
+
+fatJar {
+    manifest {
+        attributes 'Main-Class': 'Main'
+    }
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.8.11.2'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
