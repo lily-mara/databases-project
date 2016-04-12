@@ -196,9 +196,10 @@ public class DatabaseFrame{
 
                 ErrorCode errorCode = currentUser.purchaseGame(GameId);
                 if(errorCode.result == ErrorResult.FAIL)
-                     JOptionPane.showMessageDialog(frame,
-                            errorCode.message);
-                //Add feedback
+
+                if (row == -1) {
+                    return;
+                }
             }
         });
 
