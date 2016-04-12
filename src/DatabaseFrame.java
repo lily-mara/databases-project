@@ -202,7 +202,12 @@ public class DatabaseFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 TableInfo t = new TableInfo(currentUser.friends());
-                replaceTable(userTable, t.rowData, t.columns);
+                if(t.columns != null) {
+                    replaceTable(userTable, t.rowData, t.columns);
+                } else {
+                    JOptionPane.showMessageDialog(frame,
+                            "You have no friends :(");
+                }
             }
         });
 
