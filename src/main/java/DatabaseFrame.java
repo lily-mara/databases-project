@@ -192,7 +192,12 @@ public class DatabaseFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 int row = table.getSelectedRow();
-                int GameId = (int)table.getValueAt(row,1);
+
+                if (row == -1) {
+                    return;
+                }
+
+                int GameId = (Integer)table.getValueAt(row,1);
                 if( !currentUser.purchaseGame(GameId) )
                      JOptionPane.showMessageDialog(frame,
                             "That game could not be purchased :(");
