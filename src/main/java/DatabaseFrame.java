@@ -195,7 +195,9 @@ public class DatabaseFrame{
                 int GameId = (Integer) table.getValueAt(row,1);
 
                 ErrorCode errorCode = currentUser.purchaseGame(GameId);
-                if(errorCode.result == ErrorResult.FAIL)
+                if(errorCode.result == ErrorResult.FAIL) {
+                    JOptionPane.showMessageDialog(frame, errorCode.message);
+                }
 
                 if (row == -1) {
                     return;
