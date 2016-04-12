@@ -179,10 +179,8 @@ public class User extends Model {
             PreparedStatement s = c.prepareStatement("INSERT INTO OWNS VALUES(?,?)");
             s.setInt(1, GameId);
             s.setInt(2, id);
-            if( s.execute() )
-                return new ErrorCode(ErrorResult.SUCCESS, "Success");
-            else
-                return new ErrorCode(ErrorResult.FAIL, "You already own the game");
+            s.execute();
+            return new ErrorCode(ErrorResult.SUCCESS, "Congratulations, you bought a game!");
 
         }catch(SQLException e){
             System.err.println(e);

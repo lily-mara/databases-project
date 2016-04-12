@@ -60,12 +60,12 @@ public class DatabaseFrame{
         // Create Labels
         JLabel userLabel = new JLabel("Username:");
         JLabel passLabel = new JLabel("Password:");
-        JLabel userNotFoundWarning = new JLabel("User not found!");
+        final JLabel userNotFoundWarning = new JLabel("User not found!");
         userNotFoundWarning.setForeground(Color.red);
         userNotFoundWarning.setVisible(false);
 
         // Create Inputs
-        JTextField userNameInput = new JTextField(15);
+        final JTextField userNameInput = new JTextField(15);
         JPasswordField passInput = new JPasswordField(15);
 
         // Button Functionality
@@ -196,6 +196,9 @@ public class DatabaseFrame{
 
                 ErrorCode errorCode = currentUser.purchaseGame(GameId);
                 if(errorCode.result == ErrorResult.FAIL) {
+                    JOptionPane.showMessageDialog(frame, errorCode.message);
+                }
+                else if(errorCode.result == ErrorResult.SUCCESS) {
                     JOptionPane.showMessageDialog(frame, errorCode.message);
                 }
 
