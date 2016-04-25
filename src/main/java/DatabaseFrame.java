@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 /**
  * Created by loomisdf on 4/10/2016.
@@ -62,6 +63,7 @@ public class DatabaseFrame{
     private void createLoginScreen() {
         loginScreen = new JPanel();
 
+
         // Create Labels
         JLabel userLabel = new JLabel("Username:");
         JLabel passLabel = new JLabel("Password:");
@@ -95,6 +97,12 @@ public class DatabaseFrame{
             }
         });
 
+        try {
+            loginScreen.add(new JLabel(new ImageIcon("src" + File.separator + "MistLogo2.png")));
+        }catch(Exception E){
+            E.printStackTrace();
+        }
+
         loginScreen.add(userLabel);
         loginScreen.add(userNameInput);
 
@@ -106,6 +114,8 @@ public class DatabaseFrame{
         loginScreen.add(invalidPasswordWarning);
         loginScreen.setLayout(new BoxLayout(loginScreen, BoxLayout.PAGE_AXIS));
     }
+
+
 
     private void createUserScreen() {
         userScreen = new JTabbedPane();
