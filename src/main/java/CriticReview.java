@@ -16,6 +16,10 @@ public class CriticReview extends Model implements Review {
         return text;
     }
 
+    public double getRating() {
+        return rating;
+    }
+
     @Override
     public String toString() {
         return String.format("[CriticReview %s's review of %s]", company, game);

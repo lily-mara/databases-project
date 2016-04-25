@@ -70,6 +70,26 @@ public class User extends Model {
         }
     }
 
+    public boolean owns(Game g) {
+        return games().contains(g);
+    }
+
+    public UserReview writeReview(Game g, double rating, String text) {
+        if (owns(g)) {
+            UserReview u = new UserReview();
+            u.rating = rating;
+            u.user = this;
+            u.game = g;
+            u.text = text;
+
+            u.create();
+
+            return u;
+        } else {
+            return null;
+        }
+    }
+
     public List<User> friends() {
         List friendList = new ArrayList<User>();
         User currentUser;

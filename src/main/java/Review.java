@@ -4,4 +4,5 @@
 public interface Review {
     public String getText();
     public Game getGame();
+    public double getRating();
 }
