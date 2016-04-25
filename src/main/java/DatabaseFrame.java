@@ -70,6 +70,10 @@ public class DatabaseFrame{
         userNotFoundWarning.setForeground(Color.red);
         userNotFoundWarning.setVisible(false);
 
+        final JLabel invalidPasswordWarning = new JLabel("Invalid password!");
+        invalidPasswordWarning.setForeground(Color.red);
+        invalidPasswordWarning.setVisible(false);
+
         // Create Inputs
         final JTextField userNameInput = new JTextField(15);
         JPasswordField passInput = new JPasswordField(15);
@@ -81,9 +85,13 @@ public class DatabaseFrame{
             public void actionPerformed(ActionEvent e) {
                 currentUser = User.getUserByProfileName(userNameInput.getText());
                 if(currentUser != null) {
-                    loginScreen.setVisible(false);
-                    userGreeting.setText("Hello " + currentUser.profileName);
-                    userScreen.setVisible(true);
+                    if (currentUser.isPasswordValid(passInput.getText())) {
+                        loginScreen.setVisible(false);
+                        userGreeting.setText("Hello " + currentUser.profileName);
+                        userScreen.setVisible(true);
+                    } else {
+                        invalidPasswordWarning.setVisible(true);
+                    }
                 }
                 else {
                     userNotFoundWarning.setVisible(true);
@@ -99,6 +107,7 @@ public class DatabaseFrame{
 
         loginScreen.add(loginButton);
         loginScreen.add(userNotFoundWarning);
+        loginScreen.add(invalidPasswordWarning);
         loginScreen.setLayout(new BoxLayout(loginScreen, BoxLayout.PAGE_AXIS));
     }
 

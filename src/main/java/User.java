@@ -1,6 +1,7 @@
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
+import org.mindrot.BCrypt;
 
 
 /**
@@ -13,6 +14,7 @@ public class User extends Model {
     public int level;
     public String phone;
     public int id;
+    private String passwordHash;
 
     public List<Game> games() {
         List<Game> games = new ArrayList<Game>();
@@ -42,7 +44,7 @@ public class User extends Model {
     public static User getUserByProfileName(String profileName) {
         try {
             PreparedStatement s = c.prepareStatement(
-                    "select real_name, profile_name, credit_card, level, phone, id from user where profile_name=? COLLATE NOCASE"
+                    "select * from user where profile_name=? COLLATE NOCASE"
             );
             s.setString(1, profileName);
             ResultSet rs = s.executeQuery();
@@ -55,6 +57,8 @@ public class User extends Model {
                 u.creditCard = rs.getString("credit_card");
                 u.level = rs.getInt("level");
                 u.phone = rs.getString("phone");
+                u.passwordHash = rs.getString("password_hash");
+
                 return u;
             } else {
                 return null;
@@ -88,6 +92,7 @@ public class User extends Model {
                 currentUser.level = rs.getInt("level");
                 currentUser.phone = rs.getString("phone");
                 currentUser.id = rs.getInt("id");
+                currentUser.passwordHash = rs.getString("password_hash");
 
                 friendList.add(currentUser);
             }
@@ -160,6 +165,7 @@ public class User extends Model {
                 currentUser.level = rs.getInt("level");
                 currentUser.phone = rs.getString("phone");
                 currentUser.id = rs.getInt("id");
+                currentUser.passwordHash = rs.getString("password_hash");
 
                 userList.add(currentUser);
             }
@@ -187,5 +193,27 @@ public class User extends Model {
         }
 
         return new ErrorCode(ErrorResult.FAIL, "You already own the game");
+    }
+
+    private void setPasswordUnsafe(String password) {
+        passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        try {
+            PreparedStatement s = c.prepareStatement("UPDATE GAME SET Password_hash=? WHERE Id=?");
+            s.setString(1, passwordHash);
+            s.setInt(2, id);
+        } catch(SQLException e){
+            System.err.println(e);
+        }
+    }
+
+    public void setPassword(String currentPassword, String newPassword) {
+        if (isPasswordValid(currentPassword)) {
+            setPasswordUnsafe(newPassword);
+        }
+    }
+
+    public boolean isPasswordValid(String password) {
+        return BCrypt.checkpw(password, passwordHash);
     }
 }
