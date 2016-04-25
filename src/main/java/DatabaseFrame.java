@@ -80,22 +80,19 @@ public class DatabaseFrame{
 
         // Button Functionality
         JButton loginButton = new JButton("Login");
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                currentUser = User.getUserByProfileName(userNameInput.getText());
-                if(currentUser != null) {
-                    if (currentUser.isPasswordValid(String.valueOf(passInput.getPassword()))) {
-                        loginScreen.setVisible(false);
-                        userGreeting.setText("Hello " + currentUser.profileName);
-                        userScreen.setVisible(true);
-                    } else {
-                        invalidPasswordWarning.setVisible(true);
-                    }
+        loginButton.addActionListener((ActionEvent e) -> {
+            currentUser = User.getUserByProfileName(userNameInput.getText());
+            if(currentUser != null) {
+                if (currentUser.isPasswordValid(String.valueOf(passInput.getPassword()))) {
+                    loginScreen.setVisible(false);
+                    userGreeting.setText("Hello " + currentUser.profileName);
+                    userScreen.setVisible(true);
+                } else {
+                    invalidPasswordWarning.setVisible(true);
                 }
-                else {
-                    userNotFoundWarning.setVisible(true);
-                }
+            }
+            else {
+                userNotFoundWarning.setVisible(true);
             }
         });
 
@@ -212,23 +209,20 @@ public class DatabaseFrame{
 
     private void createButtons() {
         goButton = new JButton("Go!");
-        goButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String operation = (String) dropdown.getSelectedItem();
-                switch(operation) {
-                    case("Show All Games"): {
-                        TableInfo t = new TableInfo(Game.getAllGames());
-                        replaceTable(gameTable,tableModel,t.rowData, t.columns);
-                        purchaseButton.setVisible(true);
-                        break;
-                    }
-                    case("Show All Categories") : {
-                        TableInfo t = new TableInfo(Category.getAllCategories());
-                        replaceTable(gameTable,tableModel, t.rowData, t.columns);
-                        purchaseButton.setVisible(false);
-                        break;
-                    }
+        goButton.addActionListener((ActionEvent e) -> {
+            String operation = (String) dropdown.getSelectedItem();
+            switch(operation) {
+                case("Show All Games"): {
+                    TableInfo t = new TableInfo(Game.getAllGames());
+                    replaceTable(gameTable,tableModel,t.rowData, t.columns);
+                    purchaseButton.setVisible(true);
+                    break;
+                }
+                case("Show All Categories") : {
+                    TableInfo t = new TableInfo(Category.getAllCategories());
+                    replaceTable(gameTable,tableModel, t.rowData, t.columns);
+                    purchaseButton.setVisible(false);
+                    break;
                 }
             }
         });
@@ -257,30 +251,24 @@ public class DatabaseFrame{
         });
 
         friends = new JButton("Friends");
-        friends.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TableInfo t = new TableInfo(currentUser.friends());
-                if(t.columns != null) {
-                    replaceTable(userTable, tableModel2, t.rowData, t.columns);
-                } else {
-                    JOptionPane.showMessageDialog(frame,
-                            "You have no friends :(");
-                }
+        friends.addActionListener((ActionEvent e) -> {
+            TableInfo t = new TableInfo(currentUser.friends());
+            if(t.columns != null) {
+                replaceTable(userTable, tableModel2, t.rowData, t.columns);
+            } else {
+                JOptionPane.showMessageDialog(frame,
+                        "You have no friends :(");
             }
         });
 
         ownedGames = new JButton("My Games");
-        ownedGames.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TableInfo t = new TableInfo(currentUser.games());
-                if (t.columns != null)
-                    replaceTable(userTable, tableModel2, t.rowData, t.columns);
-                else
-                    JOptionPane.showMessageDialog(frame,
-                            "You have no games :(");
-            }
+        ownedGames.addActionListener((ActionEvent e) -> {
+            TableInfo t = new TableInfo(currentUser.games());
+            if (t.columns != null)
+                replaceTable(userTable, tableModel2, t.rowData, t.columns);
+            else
+                JOptionPane.showMessageDialog(frame,
+                        "You have no games :(");
         });
     }
 }
