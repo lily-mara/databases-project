@@ -230,23 +230,20 @@ public class DatabaseFrame{
 
         purchaseButton = new JButton("Purchase");
         purchaseButton.setVisible(false);
-        purchaseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int row = gameTable.getSelectedRow();
-                int GameId = (Integer) gameTable.getValueAt(row,1);
+        purchaseButton.addActionListener(e -> {
+            int row = gameTable.getSelectedRow();
+            int GameId = (Integer) gameTable.getValueAt(row,1);
 
-                ErrorCode errorCode = currentUser.purchaseGame(GameId);
-                if(errorCode.result == ErrorResult.FAIL) {
-                    JOptionPane.showMessageDialog(frame, errorCode.message);
-                }
-                else if(errorCode.result == ErrorResult.SUCCESS) {
-                    JOptionPane.showMessageDialog(frame, errorCode.message);
-                }
+            ErrorCode errorCode = currentUser.purchaseGame(GameId);
+            if(errorCode.result == ErrorResult.FAIL) {
+                JOptionPane.showMessageDialog(frame, errorCode.message);
+            }
+            else if(errorCode.result == ErrorResult.SUCCESS) {
+                JOptionPane.showMessageDialog(frame, errorCode.message);
+            }
 
-                if (row == -1) {
-                    return;
-                }
+            if (row == -1) {
+                return;
             }
         });
 
