@@ -78,8 +78,8 @@ public class User extends Model {
             Statement statement = c.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-            PreparedStatement s = c.prepareStatement("SELECT DISTINCT Real_name, Profile_name, Credit_card, Level, Phone, Id FROM FRIEND JOIN USER ON User1 = Id WHERE User2=?" +
-                    " UNION SELECT DISTINCT Real_name, Profile_name, Credit_card, Level, Phone, Id FROM FRIEND JOIN USER ON User2 = Id WHERE User1=?");
+            PreparedStatement s = c.prepareStatement("SELECT DISTINCT Real_name, Profile_name, Credit_card, Level, Phone, Id, Password_hash FROM FRIEND JOIN USER ON User1 = Id WHERE User2=?" +
+                    " UNION SELECT DISTINCT Real_name, Profile_name, Credit_card, Level, Phone, Id, Password_hash FROM FRIEND JOIN USER ON User2 = Id WHERE User1=?");
             s.setInt(1, id);
             s.setInt(2, id);
             ResultSet rs = s.executeQuery();
