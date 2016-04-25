@@ -2,7 +2,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -18,13 +17,13 @@ public class DatabaseFrame{
     private JButton goButton;
     private JButton purchaseButton;
     private JTable gameTable;
-    private DefaultTableModel tableModel;
+    private DefaultTableModel gameTableModel;
     private JComboBox dropdown;
     private JTabbedPane userScreen;
     private JButton friends;
     private JButton ownedGames;
     private JTable userTable;
-    private DefaultTableModel tableModel2;
+    private DefaultTableModel userTableModel;
     private JPanel gameListPanel;
     private JPanel gamePagePanel;
     private JLabel gameNameLabel;
@@ -155,8 +154,8 @@ public class DatabaseFrame{
     private void createTable() {
         gameTable = new JTable();
         userTable = new JTable();
-        tableModel = new DefaultTableModel(0, 0);
-        tableModel2 = new DefaultTableModel(0, 0);
+        gameTableModel = new DefaultTableModel(0, 0);
+        userTableModel = new DefaultTableModel(0, 0);
 
         // Double click on a game title
         gameTable.addMouseListener(new MouseAdapter() {
@@ -214,13 +213,13 @@ public class DatabaseFrame{
             switch(operation) {
                 case("Show All Games"): {
                     TableInfo t = new TableInfo(Game.getAllGames());
-                    replaceTable(gameTable,tableModel,t.rowData, t.columns);
+                    replaceTable(gameTable, gameTableModel,t.rowData, t.columns);
                     purchaseButton.setVisible(true);
                     break;
                 }
                 case("Show All Categories") : {
                     TableInfo t = new TableInfo(Category.getAllCategories());
-                    replaceTable(gameTable,tableModel, t.rowData, t.columns);
+                    replaceTable(gameTable, gameTableModel, t.rowData, t.columns);
                     purchaseButton.setVisible(false);
                     break;
                 }
@@ -251,7 +250,7 @@ public class DatabaseFrame{
         friends.addActionListener((ActionEvent e) -> {
             TableInfo t = new TableInfo(currentUser.friends());
             if(t.columns != null) {
-                replaceTable(userTable, tableModel2, t.rowData, t.columns);
+                replaceTable(userTable, userTableModel, t.rowData, t.columns);
             } else {
                 JOptionPane.showMessageDialog(frame,
                         "You have no friends :(");
@@ -262,7 +261,7 @@ public class DatabaseFrame{
         ownedGames.addActionListener((ActionEvent e) -> {
             TableInfo t = new TableInfo(currentUser.games());
             if (t.columns != null)
-                replaceTable(userTable, tableModel2, t.rowData, t.columns);
+                replaceTable(userTable, userTableModel, t.rowData, t.columns);
             else
                 JOptionPane.showMessageDialog(frame,
                         "You have no games :(");
