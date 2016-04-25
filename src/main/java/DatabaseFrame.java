@@ -76,7 +76,7 @@ public class DatabaseFrame{
 
         // Create Inputs
         final JTextField userNameInput = new JTextField(15);
-        JPasswordField passInput = new JPasswordField(15);
+        final JPasswordField passInput = new JPasswordField(15);
 
         // Button Functionality
         JButton loginButton = new JButton("Login");
@@ -85,7 +85,7 @@ public class DatabaseFrame{
             public void actionPerformed(ActionEvent e) {
                 currentUser = User.getUserByProfileName(userNameInput.getText());
                 if(currentUser != null) {
-                    if (currentUser.isPasswordValid(passInput.getText())) {
+                    if (currentUser.isPasswordValid(String.valueOf(passInput.getPassword()))) {
                         loginScreen.setVisible(false);
                         userGreeting.setText("Hello " + currentUser.profileName);
                         userScreen.setVisible(true);
