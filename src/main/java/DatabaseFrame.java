@@ -3,6 +3,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by loomisdf on 4/10/2016.
@@ -15,7 +17,7 @@ public class DatabaseFrame{
     private JPanel loginScreen;
     private JButton goButton;
     private JButton purchaseButton;
-    private JTable table;
+    private JTable gameTable;
     private DefaultTableModel tableModel;
     private JComboBox dropdown;
     private JTabbedPane userScreen;
@@ -23,6 +25,10 @@ public class DatabaseFrame{
     private JButton ownedGames;
     private JTable userTable;
     private DefaultTableModel tableModel2;
+    private JPanel gameListPanel;
+    private JPanel gamePagePanel;
+    private JLabel gameNameLabel;
+    private JScrollPane gameTableScrollPane;
 
     private User currentUser;
 
@@ -102,15 +108,21 @@ public class DatabaseFrame{
         // Store Panel
         JPanel card1 = new JPanel();
 
-        JPanel optionPanel = new JPanel();
-        optionPanel.add(descriptionLabel);
-        optionPanel.add(dropdown);
-        optionPanel.add(goButton);
-        optionPanel.add(purchaseButton);
-        optionPanel.setLayout(new FlowLayout());
+        gameListPanel = new JPanel();
+        gameListPanel.add(descriptionLabel);
+        gameListPanel.add(dropdown);
+        gameListPanel.add(goButton);
+        gameListPanel.add(purchaseButton);
+        gameListPanel.setLayout(new FlowLayout());
 
-        card1.add(optionPanel);
-        card1.add(new JScrollPane(table));
+        //Create the gamePanel
+        createGamePagePanel();
+        gamePagePanel.setVisible(false);
+
+        card1.add(gameListPanel);
+        card1.add(gamePagePanel);
+        gameTableScrollPane = new JScrollPane(gameTable);
+        card1.add(gameTableScrollPane);
 
         card1.setLayout(new BoxLayout(card1, BoxLayout.Y_AXIS));
 
@@ -135,10 +147,27 @@ public class DatabaseFrame{
     }
 
     private void createTable() {
-        table = new JTable();
+        gameTable = new JTable();
         userTable = new JTable();
         tableModel = new DefaultTableModel(0, 0);
         tableModel2 = new DefaultTableModel(0, 0);
+
+        // Double click on a game title
+        gameTable.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                JTable table =(JTable) me.getSource();
+                Point p = me.getPoint();
+                int row = table.rowAtPoint(p);
+                String gameTitle = (String) table.getValueAt(row, 0);
+                if (me.getClickCount() == 2) {
+                    // your valueChanged overridden method
+                    gameListPanel.setVisible(false);
+                    updateGamePagePanel(gameTitle);
+                    gamePagePanel.setVisible(true);
+                    gameTableScrollPane.setVisible(false);
+                }
+            }
+        });
     }
 
     public void replaceTable(JTable cTable, DefaultTableModel model, Object rowData[][], Object columns[]) {
@@ -161,6 +190,17 @@ public class DatabaseFrame{
         }
     }
 
+    private void createGamePagePanel() {
+        gamePagePanel = new JPanel();
+        gameNameLabel = new JLabel("This shouldn't be showing yet");
+        gamePagePanel.add(gameNameLabel);
+    }
+
+    private void updateGamePagePanel(String gameName) {
+        gamePagePanel.setVisible(true);
+        gameNameLabel.setText(gameName);
+    }
+
     private void createButtons() {
         goButton = new JButton("Go!");
         goButton.addActionListener(new ActionListener() {
@@ -170,17 +210,16 @@ public class DatabaseFrame{
                 switch(operation) {
                     case("Show All Games"): {
                         TableInfo t = new TableInfo(Game.getAllGames());
-                        replaceTable(table,tableModel,t.rowData, t.columns);
+                        replaceTable(gameTable,tableModel,t.rowData, t.columns);
                         purchaseButton.setVisible(true);
                         break;
                     }
                     case("Show All Categories") : {
                         TableInfo t = new TableInfo(Category.getAllCategories());
-                        replaceTable(table,tableModel, t.rowData, t.columns);
+                        replaceTable(gameTable,tableModel, t.rowData, t.columns);
                         purchaseButton.setVisible(false);
                         break;
                     }
-
                 }
             }
         });
@@ -191,8 +230,8 @@ public class DatabaseFrame{
         purchaseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int row = table.getSelectedRow();
-                int GameId = (Integer) table.getValueAt(row,1);
+                int row = gameTable.getSelectedRow();
+                int GameId = (Integer) gameTable.getValueAt(row,1);
 
                 ErrorCode errorCode = currentUser.purchaseGame(GameId);
                 if(errorCode.result == ErrorResult.FAIL) {
