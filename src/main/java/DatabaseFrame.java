@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.awt.event.*;
 
 /**
  * Created by loomisdf on 4/10/2016.
@@ -102,6 +103,40 @@ public class DatabaseFrame{
         }catch(Exception E){
             E.printStackTrace();
         }
+
+        KeyListener enterListener = new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    currentUser = User.getUserByProfileName(userNameInput.getText());
+                    if(currentUser != null) {
+                        if (currentUser.isPasswordValid(String.valueOf(passInput.getPassword()))) {
+                            loginScreen.setVisible(false);
+                            userGreeting.setText("Hello " + currentUser.profileName);
+                            userScreen.setVisible(true);
+                        } else {
+                            invalidPasswordWarning.setVisible(true);
+                        }
+                    }
+                    else {
+                        userNotFoundWarning.setVisible(true);
+                    }
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        };
+
+        userNameInput.addKeyListener(enterListener);
+        passInput.addKeyListener(enterListener);
 
         loginScreen.add(userLabel);
         loginScreen.add(userNameInput);
