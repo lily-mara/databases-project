@@ -30,6 +30,7 @@ public class DatabaseFrame{
     private JPanel gamePagePanel;
     private JLabel gameNameLabel;
     private JScrollPane gameTableScrollPane;
+    private JButton backToStore;
 
     private User currentUser;
 
@@ -255,6 +256,15 @@ public class DatabaseFrame{
         gamePagePanel = new JPanel();
         gameNameLabel = new JLabel("This shouldn't be showing yet");
         gamePagePanel.add(gameNameLabel);
+
+        // Add a back button to return to the store
+        backToStore = new JButton("Back");
+        backToStore.addActionListener(e -> {
+            gameListPanel.setVisible(true);
+            gamePagePanel.setVisible(false);
+            gameTableScrollPane.setVisible(true);
+        });
+        gamePagePanel.add(backToStore);
     }
 
     private void updateGamePagePanel(String gameName) {
