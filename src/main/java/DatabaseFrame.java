@@ -45,6 +45,7 @@ public class DatabaseFrame{
     private JPanel profilePanel;
 
     private JButton searchSubmit;
+    private Game currentGame;
 
 
     private User currentUser;
@@ -208,7 +209,7 @@ public class DatabaseFrame{
         gameListPanel.add(descriptionLabel);
         gameListPanel.add(dropdown);
         gameListPanel.add(goButton);
-        gameListPanel.add(purchaseButton);
+        //gameListPanel.add(purchaseButton);
         gameListPanel.add(searchSubmit);
         gameListPanel.setLayout(new FlowLayout());
 
@@ -280,11 +281,12 @@ public class DatabaseFrame{
                 JTable table =(JTable) me.getSource();
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
-                String gameTitle = (String) table.getValueAt(row, 0);
+                int gameId = (Integer) table.getValueAt(row, 1);
+                currentGame = Game.getGameById(gameId);
                 if (me.getClickCount() == 2) {
                     // your valueChanged overridden method
                     gameListPanel.setVisible(false);
-                    updateGamePagePanel(gameTitle);
+                    updateGamePagePanel(currentGame.name);
                     gamePagePanel.setVisible(true);
                     gameTableScrollPane.setVisible(false);
                 }
@@ -316,6 +318,7 @@ public class DatabaseFrame{
         gamePagePanel = new JPanel();
         gameNameLabel = new JLabel("This shouldn't be showing yet");
         gamePagePanel.add(gameNameLabel);
+        gamePagePanel.add(purchaseButton);
 
         // Add a back button to return to the store
         backToStore = new JButton("Back");
@@ -356,19 +359,12 @@ public class DatabaseFrame{
         purchaseButton = new JButton("Purchase");
         purchaseButton.setVisible(false);
         purchaseButton.addActionListener(e -> {
-            int row = gameTable.getSelectedRow();
-            int GameId = (Integer) gameTable.getValueAt(row,1);
-
-            ErrorCode errorCode = currentUser.purchaseGame(GameId);
+            ErrorCode errorCode = currentUser.purchaseGame(currentGame.id);
             if(errorCode.result == ErrorResult.FAIL) {
                 JOptionPane.showMessageDialog(frame, errorCode.message);
             }
             else if(errorCode.result == ErrorResult.SUCCESS) {
                 JOptionPane.showMessageDialog(frame, errorCode.message);
-            }
-
-            if (row == -1) {
-                return;
             }
         });
 
