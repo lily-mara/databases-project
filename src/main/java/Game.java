@@ -35,6 +35,22 @@ public class Game extends Model {
         return games;
     }
 
+    public static Game getGameById(int id) {
+        try {
+            PreparedStatement s = c.prepareStatement(
+                    "SELECT id, name, price from game where id=?"
+            );
+            s.setInt(1, id);
+
+            ResultSet rs = s.executeQuery();
+            return new Game(rs);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static List<Game> search(String key) {
         List<Game> games = new ArrayList<>();
 
