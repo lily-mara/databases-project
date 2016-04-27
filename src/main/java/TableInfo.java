@@ -102,16 +102,20 @@ public class TableInfo {
     }
 
     public void setupGame(List<Game> games) {
-        this.columns = new String[3];
+        this.columns = new String[5];
         columns[0] = "Name";
         columns[1] = "Id";
         columns[2] = "Price";
+        columns[3] = "Critic Rating";
+        columns[4] = "User Rating";
 
         this.rowData = new Object[games.size()][columns.length];
         for(int i = 0; i < games.size(); i++){
             rowData[i][0] = games.get(i).name;
             rowData[i][1] = games.get(i).id;
             rowData[i][2] = games.get(i).price;
+            rowData[i][3] = games.get(i).getCriticRating();
+            rowData[i][4] = games.get(i).getUserRating();
         }
     }
 

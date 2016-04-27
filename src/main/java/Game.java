@@ -59,6 +59,32 @@ public class Game extends Model {
         }
     }
 
+    public float getCriticRating() {
+        try {
+            PreparedStatement s = c.prepareStatement("SELECT AVG(rating) from CRITIC_REVIEW where game_id=? GROUP BY GAME_ID");
+            s.setInt(1, id);
+
+            ResultSet rs = s.executeQuery();
+            return rs.getFloat(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public float getUserRating() {
+        try {
+            PreparedStatement s = c.prepareStatement("SELECT AVG(rating) from USER_REVIEW where game_id=? GROUP BY GAME_ID");
+            s.setInt(1, id);
+
+            ResultSet rs = s.executeQuery();
+            return rs.getFloat(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
     public List<Review> reviews() {
         try {
             List<Review> reviews = new ArrayList<>();
