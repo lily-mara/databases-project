@@ -35,6 +35,8 @@ public class DatabaseFrame{
     private JButton addFriendButton;
     private JButton removeFriend;
     private JButton backToStore;
+    private JButton searchSubmit;
+    private JTextField searchField;
 
     private User currentUser;
 
@@ -53,6 +55,19 @@ public class DatabaseFrame{
         frame = new JFrame("Database Frame");
         panel = new JPanel();
         descriptionLabel = new JLabel("Welcome to the DB");
+        searchSubmit = new JButton("Search");
+        searchField = new JTextField();
+
+        searchSubmit.addActionListener(e -> {
+            TableInfo t = new TableInfo(Game.search(searchField.getText()));
+            if (t.columns != null) {
+                replaceTable(gameTable, gameTableModel, t.rowData, t.columns);
+                purchaseButton.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(frame,
+                        "No game matching that search :(");
+            }
+        });
 
         // Various creation operations
         createDropdown();
@@ -179,6 +194,8 @@ public class DatabaseFrame{
         gameListPanel.add(dropdown);
         gameListPanel.add(goButton);
         gameListPanel.add(purchaseButton);
+        gameListPanel.add(searchField);
+        gameListPanel.add(searchSubmit);
         gameListPanel.setLayout(new FlowLayout());
 
 
