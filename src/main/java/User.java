@@ -195,6 +195,7 @@ public class User extends Model {
 
         return userList;
     }
+
     public ErrorCode purchaseGame( int GameId ){
         //Need to check for credit card/ownership
         if(creditCard == null) {
@@ -213,6 +214,34 @@ public class User extends Model {
         }
 
         return new ErrorCode(ErrorResult.FAIL, "You already own the game");
+    }
+
+    public boolean addFriend(int friendId){
+        try {
+            PreparedStatement s = c.prepareStatement("INSERT INTO FRIEND VALUES(?,?)");
+            s.setInt(1, id);
+            s.setInt(2, friendId);
+            s.execute();
+            return true;
+        }catch(SQLException e){
+            System.err.println(e);
+        }
+        return false;
+    }
+
+    public boolean removeFriend(int friendId){
+        try {
+            PreparedStatement s = c.prepareStatement("DELETE FROM FRIEND WHERE (User1=? AND User2=?) OR (User1=? AND User2=?)");
+            s.setInt(1, id);
+            s.setInt(2, friendId);
+            s.setInt(3, friendId);
+            s.setInt(4, id);
+            s.execute();
+            return true;
+        }catch(SQLException e){
+            System.err.println(e);
+        }
+        return false;
     }
 
     private void setPasswordUnsafe(String password) {
@@ -235,5 +264,15 @@ public class User extends Model {
 
     public boolean isPasswordValid(String password) {
         return BCrypt.checkpw(password, passwordHash);
+    }
+
+    @Override
+    public boolean equals(Object o){
+        User u;
+        if(o instanceof User){
+            u = (User)o;
+            return u.id == this.id;
+        }
+        return false;
     }
 }
