@@ -2,29 +2,53 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by nate on 4/10/16.
- */
 public class Game extends Model {
     public int id;
     public String name;
     public float price;
 
+    public Game() {
+
+    }
+
+    private Game(ResultSet rs) throws SQLException {
+        id = rs.getInt("id");
+        name = rs.getString("name");
+        price = rs.getFloat("price");
+    }
+
     public static List<Game> getAllGames() {
-        List<Game> games = new ArrayList<Game>();
+        List<Game> games = new ArrayList<>();
         try {
             PreparedStatement s = c.prepareStatement(
                     "SELECT id, name, price from game"
             );
             ResultSet rs = s.executeQuery();
-            Game g;
-            while (rs.next()) {         // read the result set
-                g = new Game();
-                g.id = rs.getInt("id");
-                g.name = rs.getString("name");
-                g.price = rs.getFloat("price");
 
-                games.add(g);
+            while (rs.next()) {
+                 games.add(new Game(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return games;
+    }
+
+    public static List<Game> search(String key) {
+        List<Game> games = new ArrayList<>();
+
+        key = "%" + key + "%";
+
+        try {
+            PreparedStatement s = c.prepareStatement(
+                    "SELECT id, name, price from game where name like ?"
+            );
+            s.setString(1, key);
+
+            ResultSet rs = s.executeQuery();
+            while (rs.next()) {         // read the result set
+                games.add(new Game(rs));
             }
 
         } catch (SQLException e) {
@@ -35,7 +59,7 @@ public class Game extends Model {
 
     public List<Category> categories() {
         try {
-            List<Category> categories = new ArrayList<Category>();
+            List<Category> categories = new ArrayList<>();
             Category cat;
 
             PreparedStatement s = c.prepareStatement(
