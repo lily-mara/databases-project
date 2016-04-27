@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 /**
  * Created by loomisdf on 4/10/2016.
@@ -30,7 +31,11 @@ public class DatabaseFrame{
     private JPanel gamePagePanel;
     private JLabel gameNameLabel;
     private JScrollPane gameTableScrollPane;
+    private JTextField addFriendText;
+    private JButton addFriendButton;
+    private JButton removeFriend;
     private JButton backToStore;
+
     //Profile Things
     private JButton update;
     private JTextField RealName;
@@ -38,6 +43,9 @@ public class DatabaseFrame{
     private JTextField CreditCard;
     private JTextField Phone;
     private JPanel profilePanel;
+
+    private JButton searchSubmit;
+
 
     private User currentUser;
 
@@ -56,6 +64,19 @@ public class DatabaseFrame{
         frame = new JFrame("Database Frame");
         panel = new JPanel();
         descriptionLabel = new JLabel("Welcome to the DB");
+        searchSubmit = new JButton("Search");
+
+        searchSubmit.addActionListener(e -> {
+            String input = JOptionPane.showInputDialog("Search for game by title.");
+            TableInfo t = new TableInfo(Game.search(input));
+            if (t.columns != null) {
+                replaceTable(gameTable, gameTableModel, t.rowData, t.columns);
+                purchaseButton.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(frame,
+                        "No game matching that search :(");
+            }
+        });
 
         // Various creation operations
         createDropdown();
@@ -67,7 +88,7 @@ public class DatabaseFrame{
 
 
         // Setup JFrame
-        frame.setSize(500, 550);
+        frame.setSize(500, 620);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setBackground(Color.WHITE);
 
@@ -188,7 +209,9 @@ public class DatabaseFrame{
         gameListPanel.add(dropdown);
         gameListPanel.add(goButton);
         gameListPanel.add(purchaseButton);
+        gameListPanel.add(searchSubmit);
         gameListPanel.setLayout(new FlowLayout());
+
 
         //Create the gamePanel
         createGamePagePanel();
@@ -204,10 +227,21 @@ public class DatabaseFrame{
         // User Page
         JPanel card2 = new JPanel();
         userGreeting = new JLabel("Hello Unknown User");
+
+
+        addFriendText = new JTextField("New Friend", 10);
+        JPanel addFriendPanel = new JPanel();
+        addFriendPanel.add(addFriendText);
+        addFriendPanel.add(addFriendButton);
+        addFriendPanel.add(removeFriend);
+
+
         card2.add(userGreeting);
         card2.add(friends);
         card2.add(ownedGames);
+
         card2.add(new JScrollPane(userTable));
+        card2.add(addFriendPanel);
         card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
 
         //Profile settings
@@ -357,6 +391,25 @@ public class DatabaseFrame{
             else
                 JOptionPane.showMessageDialog(frame,
                         "You have no games :(");
+        });
+
+        addFriendButton = new JButton("Add");
+        addFriendButton.addActionListener((ActionEvent e)->{
+            User friend = User.getUserByProfileName(addFriendText.getText());
+
+            //if the username exists and you're not already friends
+            if(User.all().contains(friend) && !currentUser.friends().contains(friend)) {
+                currentUser.addFriend(friend.id);
+            }
+        });
+
+        removeFriend = new JButton("Remove Selected Friend");
+        removeFriend.addActionListener((ActionEvent e)->{
+            int row = userTable.getSelectedRow();
+            String friendName = (String) userTable.getValueAt(row,1);
+            int friendId = User.getUserByProfileName(friendName).id;
+            currentUser.removeFriend(friendId);
+            friends.doClick();
         });
     }
 

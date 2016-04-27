@@ -163,4 +163,9 @@ public class Game extends Model {
             return null;
         }
     }
+
+    @Override
+    public String toString() {
+        return String.format("Game <name=%s>", name);
+    }
 }
