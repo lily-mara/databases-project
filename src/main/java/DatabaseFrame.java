@@ -11,6 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by loomisdf on 4/10/2016.
  */
+
 public class DatabaseFrame{
 
     private JFrame frame;
@@ -27,6 +28,12 @@ public class DatabaseFrame{
     private JButton ownedGames;
     private JTable userTable;
     private DefaultTableModel userTableModel;
+    private JPanel friendListPanel;
+    private JPanel friendPagePanel;
+    private JLabel friendNameLabel;
+    private JScrollPane friendTableScrollPane;
+    private JButton backToFriends;
+    private JScrollPane gameTableScrollPanel;
     private JPanel gameListPanel;
     private JPanel gamePagePanel;
     private JLabel gameNameLabel;
@@ -197,8 +204,6 @@ public class DatabaseFrame{
         loginScreen.setLayout(new BoxLayout(loginScreen, BoxLayout.PAGE_AXIS));
     }
 
-
-
     private void createUserScreen() {
         userScreen = new JTabbedPane();
 
@@ -276,6 +281,19 @@ public class DatabaseFrame{
         gameTableModel = new DefaultTableModel(0, 0);
         userTableModel = new DefaultTableModel(0, 0);
 
+        // Double click on a friend name
+        userTable.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                JTable table =(JTable) me.getSource();
+                Point p = me.getPoint();
+                int row = table.rowAtPoint(p);
+                String friendName = (String) table.getValueAt(row, 0);
+                if (me.getClickCount() == 2) {
+                    userTable.setVisible(false);
+                }
+            }
+        });
+
         // Double click on a game title
         gameTable.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent me) {
@@ -313,7 +331,22 @@ public class DatabaseFrame{
             model.addRow(rowData[r]);
         }
     }
+/*
+    private void createFriendPagePanel() {
+        friendPagePanel = new JPanel();
+        friendNameLabel = new JLabel("This shouldn't be showing yet");
+        friendPagePanel.add(friendNameLabel);
 
+        // Add a back button to return to the store
+        backToStore = new JButton("Back");
+        backToStore.addActionListener(e -> {
+            gameListPanel.setVisible(true);
+            gamePagePanel.setVisible(false);
+            gameTableScrollPane.setVisible(true);
+        });
+        gamePagePanel.add(backToStore);
+    }
+*/
     private void createGamePagePanel() {
         gamePagePanel = new JPanel();
         gameNameLabel = new JLabel("This shouldn't be showing yet");
@@ -328,10 +361,15 @@ public class DatabaseFrame{
         });
         gamePagePanel.add(backToStore);
     }
-
+/*
+    private void updateFriendPagePanel(String friendName) {
+        friendNameLabel.setText(friendName);
+        friendPagePanel.setVisible(true);
+    }
+*/
     private void updateGamePagePanel(String gameName) {
-        gamePagePanel.setVisible(true);
         gameNameLabel.setText(gameName);
+        gamePagePanel.setVisible(true);
     }
 
     private void createButtons() {
