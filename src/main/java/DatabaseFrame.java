@@ -31,6 +31,13 @@ public class DatabaseFrame{
     private JLabel gameNameLabel;
     private JScrollPane gameTableScrollPane;
     private JButton backToStore;
+    //Profile Things
+    private JButton update;
+    private JTextField RealName;
+    private JTextField ProfileName;
+    private JTextField CreditCard;
+    private JTextField Phone;
+    private JPanel profilePanel;
 
     private User currentUser;
 
@@ -54,8 +61,10 @@ public class DatabaseFrame{
         createDropdown();
         createButtons();
         createTable();
-        createUserScreen();
         createLoginScreen();
+        createProfileScreen();
+        createUserScreen();
+
 
         // Setup JFrame
         frame.setSize(500, 550);
@@ -131,6 +140,10 @@ public class DatabaseFrame{
                             loginScreen.setVisible(false);
                             userGreeting.setText("Hello " + currentUser.profileName);
                             userScreen.setVisible(true);
+                            RealName.setText(currentUser.realName);
+                            ProfileName.setText(currentUser.profileName);
+                            CreditCard.setText(currentUser.creditCard);
+                            Phone.setText(currentUser.phone);
                         } else {
                             invalidPasswordWarning.setVisible(true);
                         }
@@ -197,9 +210,22 @@ public class DatabaseFrame{
         card2.add(new JScrollPane(userTable));
         card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
 
+        //Profile settings
+        JPanel card3 = new JPanel();
+        profilePanel = new JPanel();
+        card3.setLayout(new BoxLayout(card3, BoxLayout.Y_AXIS));
+        card3.add(profilePanel);
+        profilePanel.add(update);
+        profilePanel.add(RealName);
+        profilePanel.add(ProfileName);
+        profilePanel.add(CreditCard);
+        profilePanel.add(Phone);
+
+        profilePanel.setLayout(new BoxLayout(profilePanel, BoxLayout.Y_AXIS));
+
         userScreen.addTab("Store", card1);
         userScreen.addTab("User Page", card2);
-
+        userScreen.addTab("Profile Settings", card3);
         userScreen.setVisible(false);
     }
 
@@ -332,5 +358,14 @@ public class DatabaseFrame{
                 JOptionPane.showMessageDialog(frame,
                         "You have no games :(");
         });
+    }
+
+    private void createProfileScreen(){
+        update = new JButton("Update Information");
+        RealName = new JTextField();
+        ProfileName = new JTextField();
+        CreditCard = new JTextField();
+        Phone = new JTextField();
+
     }
 }

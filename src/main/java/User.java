@@ -236,4 +236,18 @@ public class User extends Model {
     public boolean isPasswordValid(String password) {
         return BCrypt.checkpw(password, passwordHash);
     }
+
+    public void UpdateAccount( ){
+        try {
+            PreparedStatement s = c.prepareStatement("UPDATE USER SET Real_name=?,Profile_name=?,Credit_card=?,Phone=? WHERE Id=?");
+            s.setString(1, realName);
+            s.setString(2, profileName);
+            s.setString(3, creditCard);
+            s.setString(4, phone);
+            s.setInt(5, id);
+            s.execute();
+        } catch(SQLException e){
+            System.err.println(e);
+        }
+    }
 }
