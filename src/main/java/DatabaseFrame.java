@@ -49,6 +49,7 @@ public class DatabaseFrame{
 
 
     private User currentUser;
+    private JPanel topPanel;
 
     public DatabaseFrame() {
         try {
@@ -130,7 +131,7 @@ public class DatabaseFrame{
             if(currentUser != null) {
                 if (currentUser.isPasswordValid(String.valueOf(passInput.getPassword()))) {
                     loginScreen.setVisible(false);
-                    userGreeting.setText("Hello " + currentUser.profileName);
+                    userGreeting.setText("Hello " + currentUser.realName);
                     userScreen.setVisible(true);
                 } else {
                     invalidPasswordWarning.setVisible(true);
@@ -160,7 +161,7 @@ public class DatabaseFrame{
                     if(currentUser != null) {
                         if (currentUser.isPasswordValid(String.valueOf(passInput.getPassword()))) {
                             loginScreen.setVisible(false);
-                            userGreeting.setText("Hello " + currentUser.profileName);
+                            userGreeting.setText("Hello " + currentUser.realName);
                             userScreen.setVisible(true);
                             RealName.setText(currentUser.realName);
                             ProfileName.setText(currentUser.profileName);
@@ -236,10 +237,11 @@ public class DatabaseFrame{
         addFriendPanel.add(addFriendButton);
         addFriendPanel.add(removeFriend);
 
-
-        card2.add(userGreeting);
-        card2.add(friends);
-        card2.add(ownedGames);
+        topPanel = new JPanel();
+        topPanel.add(userGreeting);
+        topPanel.add(friends);
+        topPanel.add(ownedGames);
+        card2.add(topPanel);
 
         card2.add(new JScrollPane(userTable));
         card2.add(addFriendPanel);
@@ -397,6 +399,7 @@ public class DatabaseFrame{
             if(User.all().contains(friend) && !currentUser.friends().contains(friend)) {
                 currentUser.addFriend(friend.id);
             }
+            friends.doClick();
         });
 
         removeFriend = new JButton("Remove Selected Friend");
