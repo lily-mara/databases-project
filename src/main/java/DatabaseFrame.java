@@ -150,6 +150,7 @@ public class DatabaseFrame{
         });
 
         try {
+
             loginScreen.add(new JLabel(new ImageIcon("src" + File.separator + "MistLogo2.png")));
         }catch(Exception E){
             E.printStackTrace();
@@ -252,6 +253,18 @@ public class DatabaseFrame{
         card2.add(addFriendPanel);
         card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
 
+        // Create the friend panel
+        /*
+        createFriendPagePanel();
+        friendPagePanel.setVisible(false);
+
+        card1.add(friendListPanel);
+        card1.add(friendPagePanel);
+        friendTableScrollPane = new JScrollPane(friendTable);
+        card1.add(friendTableScrollPane);
+
+        card1.setLayout(new BoxLayout(card1, BoxLayout.Y_AXIS));
+*/
         //Profile settings
         JPanel card3 = new JPanel();
         profilePanel = new JPanel();
@@ -333,22 +346,22 @@ public class DatabaseFrame{
             model.addRow(rowData[r]);
         }
     }
-/*
+
     private void createFriendPagePanel() {
         friendPagePanel = new JPanel();
         friendNameLabel = new JLabel("This shouldn't be showing yet");
         friendPagePanel.add(friendNameLabel);
 
         // Add a back button to return to the store
-        backToStore = new JButton("Back");
-        backToStore.addActionListener(e -> {
-            gameListPanel.setVisible(true);
-            gamePagePanel.setVisible(false);
-            gameTableScrollPane.setVisible(true);
+        backToFriends = new JButton("Back");
+        backToFriends.addActionListener(e -> {
+            friendListPanel.setVisible(true);
+            friendPagePanel.setVisible(false);
+            friendTableScrollPane.setVisible(true);
         });
-        gamePagePanel.add(backToStore);
+        friendPagePanel.add(backToFriends);
     }
-*/
+
     private void createGamePagePanel() {
         gamePagePanel = new JPanel();
         gameNameLabel = new JLabel("This shouldn't be showing yet");
@@ -364,12 +377,12 @@ public class DatabaseFrame{
         });
         gamePagePanel.add(backToStore);
     }
-/*
+
     private void updateFriendPagePanel(String friendName) {
         friendNameLabel.setText(friendName);
         friendPagePanel.setVisible(true);
     }
-*/
+
     private void updateGamePagePanel(String gameName) {
         gameNameLabel.setText(gameName);
         gamePagePanel.setVisible(true);
