@@ -173,8 +173,8 @@ public class DatabaseFrame{
                             userScreen.setVisible(true);
                             RealName.setText(currentUser.realName);
                             ProfileName.setText(currentUser.profileName);
-                            CreditCard.setText(currentUser.creditCard);
-                            Phone.setText(currentUser.phone);
+                            CreditCard.setText(currentUser.getCreditCard());
+                            Phone.setText(currentUser.getPhone());
                         } else {
                             invalidPasswordWarning.setVisible(true);
                         }
