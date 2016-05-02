@@ -134,11 +134,11 @@ public class DatabaseFrame{
         JLabel passInputLabel = new JLabel("Choose a password");
         JLabel passInputLabel2 = new JLabel("Re-enter password");
 
-        newUserInput = new JTextField("", 15);
-        realNameInput = new JTextField("", 15);
+        newUserInput = new JTextField(null, 15);
+        realNameInput = new JTextField(null, 15);
 
-        newUserPassInput = new JPasswordField("", 15);
-        newUserPassInput2 = new JPasswordField("", 15);
+        newUserPassInput = new JPasswordField(null, 15);
+        newUserPassInput2 = new JPasswordField(null, 15);
 
         newUserSubmit = new JButton("Submit");
 
@@ -149,7 +149,10 @@ public class DatabaseFrame{
         newUserSubmit.addActionListener(e -> {
             String pass1 = String.valueOf(newUserPassInput.getPassword());
             String pass2 = String.valueOf(newUserPassInput2.getPassword());
-            if((pass1 != null || pass2 != null) && pass1.equals(pass2)) {
+            if((pass1 != "" || pass2 != "")) {
+                passwordMismatchLabel.setVisible(true);
+            }
+            else if(pass1.equals(pass2)) {
                 //passwords match
                 new User(realNameInput.getText(), newUserInput.getText(), String.valueOf(newUserPassInput.getPassword()));
 
