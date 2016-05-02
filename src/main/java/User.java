@@ -78,23 +78,31 @@ public class User extends Model {
     }
 
     public void setCreditCard(String cc) {
-        cc = cc.replaceAll("[^0-9]", "");
+        if (cc == null) {
+            creditCard = null;
+        } else {
+            cc = cc.replaceAll("[^0-9]", "");
 
-        if (cc.length() != 16) {
-            throw new IllegalArgumentException("Credit card numbers must be 16 numbers!");
+            if (cc.length() != 16) {
+                throw new IllegalArgumentException("Credit card numbers must be 16 numbers!");
+            }
+
+            creditCard = cc;
         }
-
-        creditCard = cc;
     }
 
     public void setPhone(String p) {
-        p = p.replaceAll("[^0-9]", "");
+        if (p == null) {
+            phone = null;
+        } else {
+            p = p.replaceAll("[^0-9]", "");
 
-        if (p.length() != 10) {
-            throw new IllegalArgumentException("Phone numbers must be 10 numbers!");
+            if (p.length() != 10) {
+                throw new IllegalArgumentException("Phone numbers must be 10 numbers!");
+            }
+
+            phone = p;
         }
-
-        phone = p;
     }
 
     public String getPhone() {
