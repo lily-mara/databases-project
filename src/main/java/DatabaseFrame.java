@@ -150,8 +150,8 @@ public class DatabaseFrame{
         });
 
         try {
-
-            loginScreen.add(new JLabel(new ImageIcon("src" + File.separator + "MistLogo2.png")));
+            JLabel logo = new JLabel(new ImageIcon("src" + File.separator + "MistLogo2.png"));
+            loginScreen.add(logo);
         }catch(Exception E){
             E.printStackTrace();
         }
@@ -233,7 +233,12 @@ public class DatabaseFrame{
         card1.setLayout(new BoxLayout(card1, BoxLayout.Y_AXIS));
 
         // User Page
+        createFriendPagePanel();
+        friendPagePanel.setVisible(false);
+
+
         JPanel card2 = new JPanel();
+        card2.add(friendPagePanel);
         userGreeting = new JLabel("Hello Unknown User");
 
 
@@ -254,17 +259,17 @@ public class DatabaseFrame{
         card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
 
         // Create the friend panel
-        /*
-        createFriendPagePanel();
-        friendPagePanel.setVisible(false);
 
-        card1.add(friendListPanel);
-        card1.add(friendPagePanel);
-        friendTableScrollPane = new JScrollPane(friendTable);
-        card1.add(friendTableScrollPane);
+        //createFriendPagePanel();
+        //friendPagePanel.setVisible(false);
 
-        card1.setLayout(new BoxLayout(card1, BoxLayout.Y_AXIS));
-*/
+        //card2.add(friendListPanel);
+        //card2.add(friendPagePanel);
+        //friendTableScrollPane = new JScrollPane(friendTable);
+        //card2.add(friendTableScrollPane);
+
+        //card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
+
         //Profile settings
         JPanel card3 = new JPanel();
         profilePanel = new JPanel();
@@ -295,15 +300,17 @@ public class DatabaseFrame{
         gameTableModel = new DefaultTableModel(0, 0);
         userTableModel = new DefaultTableModel(0, 0);
 
-        // Double click on a friend name
+
         userTable.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent me) {
                 JTable table =(JTable) me.getSource();
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
-                String friendName = (String) table.getValueAt(row, 0);
+                String rowItem = (String) table.getValueAt(row, 0);
                 if (me.getClickCount() == 2) {
                     userTable.setVisible(false);
+                    updateFriendPagePanel(rowItem);
+                    friendPagePanel.setVisible(true);
                 }
             }
         });
@@ -349,19 +356,21 @@ public class DatabaseFrame{
 
     private void createFriendPagePanel() {
         friendPagePanel = new JPanel();
-        friendNameLabel = new JLabel("This shouldn't be showing yet");
+        friendNameLabel = new JLabel("Friend Default Name");
         friendPagePanel.add(friendNameLabel);
 
-        // Add a back button to return to the store
+        // Add a back button to return to the friend's list
         backToFriends = new JButton("Back");
         backToFriends.addActionListener(e -> {
             friendListPanel.setVisible(true);
             friendPagePanel.setVisible(false);
-            friendTableScrollPane.setVisible(true);
+            userTable.setVisible(true);
+            //friendTableScrollPane.setVisible(true);
         });
         friendPagePanel.add(backToFriends);
     }
 
+    //Navigated to, through store panel
     private void createGamePagePanel() {
         gamePagePanel = new JPanel();
         gameNameLabel = new JLabel("This shouldn't be showing yet");
