@@ -40,9 +40,19 @@ public class User extends Model {
             level = rs.getInt("user.level");
             phone = rs.getString("user.phone");
             id = rs.getInt("user.id");
-            passwordHash = rs.getString("password_hash");
+            passwordHash = rs.getString("user.password_hash");
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                profileName = rs.getString("profile_name");
+                realName = rs.getString("real_name");
+                creditCard = rs.getString("credit_card");
+                level = rs.getInt("level");
+                phone = rs.getString("phone");
+                id = rs.getInt("id");
+                passwordHash = rs.getString("password_hash");
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
         }
     }
 
