@@ -50,6 +50,7 @@ public class DatabaseFrame{
     private JTextField CreditCard;
     private JTextField Phone;
     private JPanel profilePanel;
+    private JButton restore;
 
     private JButton searchSubmit;
     private Game currentGame;
@@ -276,6 +277,7 @@ public class DatabaseFrame{
         card3.setLayout(new BoxLayout(card3, BoxLayout.Y_AXIS));
         card3.add(profilePanel);
         profilePanel.add(update);
+        profilePanel.add(restore);
         profilePanel.add(RealName);
         profilePanel.add(ProfileName);
         profilePanel.add(CreditCard);
@@ -474,6 +476,7 @@ public class DatabaseFrame{
 
     private void createProfileScreen(){
         update = new JButton("Update Information");
+        restore = new JButton("Restore");
         RealName = new JTextField();
         ProfileName = new JTextField();
         CreditCard = new JTextField();
@@ -485,6 +488,13 @@ public class DatabaseFrame{
             currentUser.creditCard = CreditCard.getText();
             currentUser.phone = Phone.getText();
             currentUser.UpdateAccount();
+        });
+
+        restore.addActionListener((ActionEvent e)->{
+            RealName.setText(currentUser.realName);
+            ProfileName.setText(currentUser.profileName);
+            CreditCard.setText(currentUser.creditCard);
+            Phone.setText(currentUser.phone);
         });
     }
 }
