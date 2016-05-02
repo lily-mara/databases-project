@@ -77,6 +77,27 @@ public class User extends Model {
         }
     }
 
+    public boolean update() {
+        try {
+            PreparedStatement s = c.prepareStatement(
+                    "UPDATE USER SET Real_name=?, Profile_name=?, Credit_card=?, Level=?, phone=?, Password_hash=? where id=?"
+            );
+
+            s.setString(1, realName);
+            s.setString(2, profileName);
+            s.setString(3, creditCard);
+            s.setInt(4, level);
+            s.setString(5, phone);
+            s.setString(6, passwordHash);
+            s.setInt(7, id);
+
+            return s.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public void setCreditCard(String cc) {
         cc = cc.replaceAll("[^0-9]", "");
 
@@ -330,14 +351,7 @@ public class User extends Model {
 
     private void setPasswordUnsafe(String password) {
         passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
-
-        try {
-            PreparedStatement s = c.prepareStatement("UPDATE GAME SET Password_hash=? WHERE Id=?");
-            s.setString(1, passwordHash);
-            s.setInt(2, id);
-        } catch(SQLException e){
-            System.err.println(e);
-        }
+        update();
     }
 
     public void setPassword(String currentPassword, String newPassword) {
@@ -348,20 +362,6 @@ public class User extends Model {
 
     public boolean isPasswordValid(String password) {
         return BCrypt.checkpw(password, passwordHash);
-    }
-
-    public void UpdateAccount( ) {
-        try {
-            PreparedStatement s = c.prepareStatement("UPDATE USER SET Real_name=?,Profile_name=?,Credit_card=?,Phone=? WHERE Id=?");
-            s.setString(1, realName);
-            s.setString(2, profileName);
-            s.setString(3, creditCard);
-            s.setString(4, phone);
-            s.setInt(5, id);
-            s.execute();
-        } catch (SQLException e) {
-            System.err.println(e);
-        }
     }
 
     @Override
