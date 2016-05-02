@@ -369,9 +369,6 @@ public class DatabaseFrame{
         SpringUtilities.makeCompactGrid(formPanel, 4, 2, 10, 10, 5, 55);
         profilePanel.add(formPanel);
         profilePanel.add(update);
-
-        restore = new JButton("Restore");
-
         profilePanel.add(restore);
 
         userScreen.addTab("Store", card1);
@@ -565,6 +562,7 @@ public class DatabaseFrame{
 
     private void createProfileScreen(){
         update = new JButton("Update Information");
+        restore = new JButton("Restore");
         RealName = new JTextField();
         ProfileName = new JTextField();
         CreditCard = new JTextField();
@@ -576,6 +574,13 @@ public class DatabaseFrame{
             currentUser.setCreditCard(CreditCard.getText());
             currentUser.setPhone(Phone.getText());
             currentUser.UpdateAccount();
+        });
+
+        restore.addActionListener((ActionEvent e)->{
+            RealName.setText(currentUser.realName);
+            ProfileName.setText(currentUser.profileName);
+            CreditCard.setText(currentUser.getCreditCard());
+            Phone.setText(currentUser.getPhone());
         });
     }
 }
