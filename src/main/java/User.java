@@ -325,7 +325,7 @@ public class User extends Model {
         passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
 
         try {
-            PreparedStatement s = c.prepareStatement("UPDATE GAME SET Password_hash=? WHERE Id=?");
+            PreparedStatement s = c.prepareStatement("UPDATE user SET Password_hash=? WHERE Id=?");
             s.setString(1, passwordHash);
             s.setInt(2, id);
         } catch(SQLException e){

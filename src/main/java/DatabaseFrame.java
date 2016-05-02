@@ -42,6 +42,16 @@ public class DatabaseFrame{
     private JButton addFriendButton;
     private JButton removeFriend;
     private JButton backToStore;
+    private JButton newUserButton;
+
+    // New user creation panel
+    private JPanel newUserPanel;
+    private JTextField realNameInput;
+    private JTextField newUserInput;
+    private JPasswordField newUserPassInput;
+    private JPasswordField newUserPassInput2;
+    private JButton newUserSubmit;
+    private JLabel passwordMismatchLabel;
 
     //Profile Things
     private JButton update;
@@ -95,6 +105,7 @@ public class DatabaseFrame{
         createLoginScreen();
         createProfileScreen();
         createUserScreen();
+        createNewUserPage();
 
 
         // Setup JFrame
@@ -105,12 +116,64 @@ public class DatabaseFrame{
         // Add things to panel
         panel.add(userScreen);
         panel.add(loginScreen);
+        panel.add(newUserPanel);
 
         // Add panel to frame
         frame.add(panel);
 
         // Set the frame visible
         frame.setVisible(true);
+    }
+
+    private void createNewUserPage() {
+        newUserPanel = new JPanel();
+        newUserPanel.setLayout(new BoxLayout(newUserPanel, BoxLayout.PAGE_AXIS));
+
+        JLabel realNameLabel = new JLabel("Enter your real name");
+        JLabel userInputLabel = new JLabel("Choose a user name");
+        JLabel passInputLabel = new JLabel("Choose a password");
+        JLabel passInputLabel2 = new JLabel("Re-enter password");
+
+        newUserInput = new JTextField("", 15);
+        realNameInput = new JTextField("", 15);
+
+        newUserPassInput = new JPasswordField("", 15);
+        newUserPassInput2 = new JPasswordField("", 15);
+
+        newUserSubmit = new JButton("Submit");
+
+        passwordMismatchLabel = new JLabel("Passwords don't match!");
+        passwordMismatchLabel.setForeground(Color.RED);
+        passwordMismatchLabel.setVisible(false);
+
+        newUserSubmit.addActionListener(e -> {
+            String pass1 = String.valueOf(newUserPassInput.getPassword());
+            String pass2 = String.valueOf(newUserPassInput2.getPassword());
+            if((pass1 != null || pass2 != null) && pass1.equals(pass2)) {
+                //passwords match
+                new User(realNameInput.getText(), newUserInput.getText(), String.valueOf(newUserPassInput.getPassword()));
+
+                //Go back to login
+                loginScreen.setVisible(true);
+                newUserPanel.setVisible(false);
+            }
+            else {
+                passwordMismatchLabel.setVisible(true);
+            }
+
+        });
+        newUserPanel.add(realNameLabel);
+        newUserPanel.add(realNameInput);
+        newUserPanel.add(userInputLabel);
+        newUserPanel.add(newUserInput);
+        newUserPanel.add(passInputLabel);
+        newUserPanel.add(newUserPassInput);
+        newUserPanel.add(passInputLabel2);
+        newUserPanel.add(newUserPassInput2);
+        newUserPanel.add(passwordMismatchLabel);
+        newUserPanel.add(newUserSubmit);
+
+        newUserPanel.setVisible(false);
     }
 
     private void createLoginScreen() {
@@ -195,6 +258,13 @@ public class DatabaseFrame{
         userNameInput.addKeyListener(enterListener);
         passInput.addKeyListener(enterListener);
 
+        // New user button
+        newUserButton = new JButton("New User");
+        newUserButton.addActionListener(e -> {
+            loginScreen.setVisible(false);
+            newUserPanel.setVisible(true);
+        });
+
         loginScreen.add(userLabel);
         loginScreen.add(userNameInput);
 
@@ -202,6 +272,7 @@ public class DatabaseFrame{
         loginScreen.add(passInput);
 
         loginScreen.add(loginButton);
+        loginScreen.add(newUserButton);
         loginScreen.add(userNotFoundWarning);
         loginScreen.add(invalidPasswordWarning);
         loginScreen.setLayout(new BoxLayout(loginScreen, BoxLayout.PAGE_AXIS));
