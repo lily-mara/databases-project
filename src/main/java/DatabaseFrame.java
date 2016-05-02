@@ -149,7 +149,7 @@ public class DatabaseFrame{
         newUserSubmit.addActionListener(e -> {
             String pass1 = String.valueOf(newUserPassInput.getPassword());
             String pass2 = String.valueOf(newUserPassInput2.getPassword());
-            if((pass1 != "" || pass2 != "")) {
+            if((pass1 == "" || pass2 == "")) {
                 passwordMismatchLabel.setVisible(true);
             }
             else if(pass1.equals(pass2)) {
