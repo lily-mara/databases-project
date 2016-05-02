@@ -500,8 +500,16 @@ public class DatabaseFrame{
         update.addActionListener((ActionEvent e)->{
             currentUser.realName = RealName.getText();
             currentUser.profileName = ProfileName.getText();
-            currentUser.setCreditCard(CreditCard.getText());
-            currentUser.setPhone(Phone.getText());
+            try {
+                currentUser.setCreditCard(CreditCard.getText());
+            }catch (IllegalArgumentException error){
+                JOptionPane.showMessageDialog(panel,"Make sure credit card is 16 digits.");
+            }
+            try {
+                currentUser.setPhone(Phone.getText());
+            }catch (IllegalArgumentException error){
+                JOptionPane.showMessageDialog(panel,"Make sure Phone number is 10 digits.");
+            }
             currentUser.UpdateAccount();
         });
 
