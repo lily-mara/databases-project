@@ -576,7 +576,7 @@ public class DatabaseFrame{
             currentUser.profileName = ProfileName.getText();
             currentUser.setCreditCard(CreditCard.getText());
             currentUser.setPhone(Phone.getText());
-            currentUser.UpdateAccount();
+            currentUser.update();
         });
 
         restore.addActionListener((ActionEvent e)->{
