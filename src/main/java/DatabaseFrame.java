@@ -299,10 +299,6 @@ public class DatabaseFrame{
         profilePanel.add(formPanel);
         profilePanel.add(update);
         profilePanel.add(restore);
-        profilePanel.add(RealName);
-        profilePanel.add(ProfileName);
-        profilePanel.add(CreditCard);
-        profilePanel.add(Phone);
 
         userScreen.addTab("Store", card1);
         userScreen.addTab("User Page", card2);
