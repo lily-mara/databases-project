@@ -207,6 +207,7 @@ public class DatabaseFrame{
                     loginScreen.setVisible(false);
                     userGreeting.setText("Hello " + currentUser.realName);
                     userScreen.setVisible(true);
+                    restore.doClick();
                 } else {
                     invalidPasswordWarning.setVisible(true);
                 }
@@ -238,10 +239,7 @@ public class DatabaseFrame{
                             loginScreen.setVisible(false);
                             userGreeting.setText("Hello " + currentUser.realName);
                             userScreen.setVisible(true);
-                            RealName.setText(currentUser.realName);
-                            ProfileName.setText(currentUser.profileName);
-                            CreditCard.setText(currentUser.getCreditCard());
-                            Phone.setText(currentUser.getPhone());
+                            restore.doClick();
                         } else {
                             invalidPasswordWarning.setVisible(true);
                         }
