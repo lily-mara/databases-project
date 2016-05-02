@@ -6,7 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.awt.event.*;
-import java.util.ArrayList;
+
 
 /**
  * Created by loomisdf on 4/10/2016.
@@ -45,6 +45,7 @@ public class DatabaseFrame{
 
     //Profile Things
     private JButton update;
+    private JButton restore;
     private JTextField RealName;
     private JTextField ProfileName;
     private JTextField CreditCard;
@@ -273,15 +274,34 @@ public class DatabaseFrame{
         //Profile settings
         JPanel card3 = new JPanel();
         profilePanel = new JPanel();
+        profilePanel.setLayout(new BoxLayout(profilePanel, BoxLayout.Y_AXIS));
         card3.setLayout(new BoxLayout(card3, BoxLayout.Y_AXIS));
         card3.add(profilePanel);
-        profilePanel.add(update);
-        profilePanel.add(RealName);
-        profilePanel.add(ProfileName);
-        profilePanel.add(CreditCard);
-        profilePanel.add(Phone);
 
-        profilePanel.setLayout(new BoxLayout(profilePanel, BoxLayout.Y_AXIS));
+        JPanel formPanel = new JPanel();
+
+        SpringLayout layout = new SpringLayout();
+        formPanel.setLayout(layout);
+        JLabel realNameLabel = new JLabel("Real Name:", JLabel.TRAILING);
+        formPanel.add(realNameLabel);
+        formPanel.add(RealName);
+        JLabel profileNameLabel = new JLabel("Profile Name:", JLabel.TRAILING);
+        formPanel.add(profileNameLabel);
+        formPanel.add(ProfileName);
+        JLabel creditCardLabel = new JLabel("Credit Card:", JLabel.TRAILING);
+        formPanel.add(creditCardLabel);
+        formPanel.add(CreditCard);
+        JLabel phoneLabel = new JLabel("Phone:", JLabel.TRAILING);
+        formPanel.add(phoneLabel);
+        formPanel.add(Phone);
+
+        SpringUtilities.makeCompactGrid(formPanel, 4, 2, 10, 10, 5, 55);
+        profilePanel.add(formPanel);
+        profilePanel.add(update);
+
+        restore = new JButton("Restore");
+
+        profilePanel.add(restore);
 
         userScreen.addTab("Store", card1);
         userScreen.addTab("User Page", card2);
@@ -482,8 +502,8 @@ public class DatabaseFrame{
         update.addActionListener((ActionEvent e)->{
             currentUser.realName = RealName.getText();
             currentUser.profileName = ProfileName.getText();
-            currentUser.creditCard = CreditCard.getText();
-            currentUser.phone = Phone.getText();
+            currentUser.setCreditCard(CreditCard.getText());
+            currentUser.setPhone(Phone.getText());
             currentUser.UpdateAccount();
         });
     }
