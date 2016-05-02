@@ -479,5 +479,12 @@ public class DatabaseFrame{
         CreditCard = new JTextField();
         Phone = new JTextField();
 
+        update.addActionListener((ActionEvent e)->{
+            currentUser.realName = RealName.getText();
+            currentUser.profileName = ProfileName.getText();
+            currentUser.creditCard = CreditCard.getText();
+            currentUser.phone = Phone.getText();
+            currentUser.UpdateAccount();
+        });
     }
 }
