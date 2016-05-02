@@ -147,14 +147,8 @@ public class Game extends Model {
                 ur.text = rs.getString("text");
                 ur.game = this;
 
-                u = new User();
+                u = new User(rs);
                 ur.user = u;
-                u.realName = rs.getString("real_name");
-                u.creditCard = rs.getString("credit_card");
-                u.level = rs.getInt("level");
-                u.phone = rs.getString("phone");
-                u.id = rs.getInt("user.id");
-
                 reviews.add(ur);
             }
 

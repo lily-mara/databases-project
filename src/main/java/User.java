@@ -10,11 +10,102 @@ import org.mindrot.BCrypt;
 public class User extends Model {
     public String realName;
     public String profileName;
-    public String creditCard;
+    private String creditCard;
     public int level;
-    public String phone;
+    private String phone;
     public int id;
     private String passwordHash;
+
+    public User() {
+        level = 1;
+        id = nextId();
+    }
+
+    public User(String realName, String profileName, String password) {
+        this.realName = realName;
+        this.profileName = profileName;
+        level = 1;
+        id = nextId();
+
+        setPasswordUnsafe(password);
+
+        save();
+    }
+
+    public User(ResultSet rs) {
+        try {
+            profileName = rs.getString("user.profile_name");
+            realName = rs.getString("user.real_name");
+            creditCard = rs.getString("user.credit_card");
+            level = rs.getInt("user.level");
+            phone = rs.getString("user.phone");
+            id = rs.getInt("user.id");
+            passwordHash = rs.getString("password_hash");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean save() {
+        try {
+            PreparedStatement s = c.prepareStatement(
+                    "INSERT INTO USER (id, Real_name, Profile_name, Credit_card, Level, phone, Password_hash) VALUES " +
+                            "(?,?,?,?,?,?,?)"
+            );
+            s.setInt(1, id);
+            s.setString(2, realName);
+            s.setString(3, profileName);
+            s.setString(4, creditCard);
+            s.setInt(5, level);
+            s.setString(6, phone);
+            s.setString(7, passwordHash);
+
+            return s.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void setCreditCard(String cc) {
+        cc = cc.replaceAll("[^0-9]", "");
+
+        if (cc.length() != 16) {
+            throw new IllegalArgumentException("Credit card numbers must be 16 numbers!");
+        }
+
+        creditCard = cc;
+    }
+
+    public void setPhone(String p) {
+        p = p.replaceAll("[^0-9]", "");
+
+        if (p.length() != 10) {
+            throw new IllegalArgumentException("Phone numbers must be 10 numbers!");
+        }
+
+        phone = p;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getCreditCard() {
+        return creditCard;
+    }
+
+    public static int nextId() {
+        try {
+            PreparedStatement s = c.prepareStatement("SELECT MAX(id) FROM user");
+            ResultSet rs = s.executeQuery();
+
+            return rs.getInt(1) + 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 
     public List<Game> games() {
         List<Game> games = new ArrayList<Game>();
@@ -50,15 +141,7 @@ public class User extends Model {
             ResultSet rs = s.executeQuery();
 
             if (rs.next()) {
-                User u = new User();
-                u.id = rs.getInt("id");
-                u.realName = rs.getString("real_name");
-                u.profileName = rs.getString("profile_name");
-                u.creditCard = rs.getString("credit_card");
-                u.level = rs.getInt("level");
-                u.phone = rs.getString("phone");
-                u.passwordHash = rs.getString("password_hash");
-
+                User u = new User(rs);
                 return u;
             } else {
                 return null;
@@ -105,15 +188,7 @@ public class User extends Model {
             ResultSet rs = s.executeQuery();
 
             while (rs.next()) {         // read the result set
-                currentUser = new User();
-                currentUser.realName = rs.getString("real_name");
-                currentUser.profileName = rs.getString("profile_name");
-                currentUser.creditCard = rs.getString("credit_card"); //Shouldn't be here
-                currentUser.level = rs.getInt("level");
-                currentUser.phone = rs.getString("phone");
-                currentUser.id = rs.getInt("id");
-                currentUser.passwordHash = rs.getString("password_hash");
-
+                currentUser = new User(rs);
                 friendList.add(currentUser);
             }
         }catch(SQLException e){
@@ -178,15 +253,7 @@ public class User extends Model {
             ResultSet rs = s.executeQuery();
 
             while (rs.next()) {         // read the result set
-                User currentUser = new User();
-                currentUser.realName = rs.getString("real_name");
-                currentUser.profileName = rs.getString("profile_name");
-                currentUser.creditCard = rs.getString("credit_card");
-                currentUser.level = rs.getInt("level");
-                currentUser.phone = rs.getString("phone");
-                currentUser.id = rs.getInt("id");
-                currentUser.passwordHash = rs.getString("password_hash");
-
+                User currentUser = new User(rs);
                 userList.add(currentUser);
             }
         }catch(SQLException e){
