@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -73,9 +75,13 @@ public class DatabaseFrame{
     private JButton searchSubmit;
     private Game currentGame;
 
-
     private User currentUser;
     private JPanel topPanel;
+
+    private JPanel card2;
+    private JTabbedPane userTabbedPane;
+
+
 
     public DatabaseFrame() {
         try {
@@ -317,7 +323,7 @@ public class DatabaseFrame{
         createFriendPagePanel();
         friendPagePanel.setVisible(false);
 
-        JPanel card2 = new JPanel();
+        card2 = new JPanel();
         card2.add(friendPagePanel);
         userGreeting = new JLabel("Hello Unknown User");
 
@@ -330,18 +336,23 @@ public class DatabaseFrame{
 
         topPanel = new JPanel();
         topPanel.add(userGreeting);
-        topPanel.add(friends);
-        topPanel.add(ownedGames);
+
         card2.add(topPanel);
 
+
         JScrollPane friendTableScrollPanel = new JScrollPane(friendUserTable);
-        card2.add(friendTableScrollPanel);
+        userTabbedPane.addTab("My Friends", friendTableScrollPanel);
         JScrollPane gameTableScrollPanel = new JScrollPane(gameUserTable);
-        card2.add(gameTableScrollPanel);
+        userTabbedPane.addTab("My Games", gameTableScrollPanel);
 
 
-        card2.setComponentZOrder(friendTableScrollPanel, 2);
-        card2.setComponentZOrder(gameTableScrollPanel, 2);
+
+
+
+        card2.add(userTabbedPane);
+
+        //card2.setComponentZOrder(friendTableScrollPanel, 2);
+        //card2.setComponentZOrder(gameTableScrollPanel, 2);
 
         card2.add(addFriendPanel);
         card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
@@ -603,23 +614,38 @@ public class DatabaseFrame{
             }
         });
 
-        friends = new JButton("Friends");
-        friends.addActionListener((ActionEvent e) -> {
-            TableInfo t = new TableInfo(currentUser.friends());
-            if(t.columns != null) {
-                swapTable(friendUserTable, friendUserTableModel, t.rowData, t.columns);
-            } else {
-                JOptionPane.showMessageDialog(frame,
-                        "You have no friends :(");
-            }
-            //friendUserTable.setVisible(true);
-            friendTableScrollPanel.setVisible(true);
-            //gameUserTable.setVisible(false);
-            gameTableScrollPanel.setVisible(false);
-        }
-        );
+        userTabbedPane = new JTabbedPane();
+        userTabbedPane.addChangeListener(new ChangeListener() {
+             @Override
+             public void stateChanged(ChangeEvent e) {
+                 TableInfo t;
+                 switch(currentUser == null ? 2 : userTabbedPane.getSelectedIndex()) {
+                     case 0:
+                         t = new TableInfo(currentUser.friends());
+                         if (t.columns != null) {
+                             swapTable(friendUserTable, friendUserTableModel, t.rowData, t.columns);
+                         } else {
+                             JOptionPane.showMessageDialog(frame,
+                                     "You have no friends :(");
+                         }
+                         break;
+                     case 1:
+                         t = new TableInfo(currentUser.games());
+                         if (t.columns != null) {
+                             swapTable(gameUserTable, gameUserTableModel, t.rowData, t.columns);
+                         } else {
+                             JOptionPane.showMessageDialog(frame,
+                                     "You have no games :(");
+                         }
+                         break;
+                     default:
+                         break;
 
-        ownedGames = new JButton("My Games");
+                 }
+             }
+         });
+
+      /*  ownedGames = new JButton("My Games");
         ownedGames.addActionListener((ActionEvent e) -> {
             TableInfo t = new TableInfo(currentUser.games());
             if (t.columns != null){
@@ -632,7 +658,7 @@ public class DatabaseFrame{
             friendTableScrollPanel.setVisible(false);
             //gameUserTable.setVisible(true);
             gameTableScrollPanel.setVisible(true);
-        });
+        }); */
 
         addFriendButton = new JButton("Add");
         addFriendButton.addActionListener((ActionEvent e)->{
