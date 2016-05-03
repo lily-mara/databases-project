@@ -109,7 +109,7 @@ public class DatabaseFrame{
             String input = JOptionPane.showInputDialog("Search for game by title.");
             TableInfo t = new TableInfo(Game.search(input));
             if (t.columns != null) {
-                replaceTable(gameTable, gameTableModel, t.rowData, t.columns);
+                updateTable(gameTable, gameTableModel, t.rowData, t.columns);
                 purchaseButton.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(frame,
@@ -489,27 +489,7 @@ public class DatabaseFrame{
         });
     }
 
-    public void replaceTable(JTable cTable, DefaultTableModel model, Object rowData[][], Object columns[]) {
-        if(rowData == null || columns == null)
-            return;
-
-        model.setColumnIdentifiers(columns);
-        cTable.setModel(model);
-
-        // Remove Rows
-        if (model.getRowCount() > 0) {
-            for (int i = model.getRowCount() - 1; i > -1; i--) {
-                model.removeRow(i);
-            }
-        }
-
-        // Add new rows
-        for(int r = 0; r < rowData.length; r++) {
-            model.addRow(rowData[r]);
-        }
-    }
-
-    public void swapTable(JTable cTable, DefaultTableModel model, Object rowData[][], Object columns[]){
+    public void updateTable(JTable cTable, DefaultTableModel model, Object rowData[][], Object columns[]){
         if(rowData == null || columns == null)
             return;
 
@@ -613,13 +593,13 @@ public class DatabaseFrame{
             switch(operation) {
                 case("Show All Games"): {
                     TableInfo t = new TableInfo(Game.getAllGames());
-                    replaceTable(gameTable, gameTableModel,t.rowData, t.columns);
+                    updateTable(gameTable, gameTableModel,t.rowData, t.columns);
                     purchaseButton.setVisible(true);
                     break;
                 }
                 case("Show All Categories") : {
                     TableInfo t = new TableInfo(Category.getAllCategories());
-                    replaceTable(gameTable, gameTableModel, t.rowData, t.columns);
+                    updateTable(gameTable, gameTableModel, t.rowData, t.columns);
                     purchaseButton.setVisible(false);
                     break;
                 }
@@ -644,11 +624,11 @@ public class DatabaseFrame{
              @Override
              public void stateChanged(ChangeEvent e) {
                  TableInfo t;
-                 switch(currentUser == null ? 2 : userTabbedPane.getSelectedIndex()) {
+                 switch(currentUser == null ? -1 : userTabbedPane.getSelectedIndex()) {
                      case 0:
                          t = new TableInfo(currentUser.friends());
                          if (t.columns != null) {
-                             swapTable(friendUserTable, friendUserTableModel, t.rowData, t.columns);
+                             updateTable(friendUserTable, friendUserTableModel, t.rowData, t.columns);
                          } else {
                              JOptionPane.showMessageDialog(frame,
                                      "You have no friends :(");
@@ -657,21 +637,21 @@ public class DatabaseFrame{
                      case 1:
                          t = new TableInfo(currentUser.games());
                          if (t.columns != null) {
-                             swapTable(gameUserTable, gameUserTableModel, t.rowData, t.columns);
+                             updateTable(gameUserTable, gameUserTableModel, t.rowData, t.columns);
                          } else {
                              JOptionPane.showMessageDialog(frame,
                                      "You have no games :(");
                          }
                          break;
-//                     case 2:
-//                         t = new TableInfo(currentUser.groups());
-//                         if (t.columns != null) {
-//                             swapTable(userGroupTable, userGroupTableModel, t.rowData, t.columns);
-//                         } else {
-//                             JOptionPane.showMessageDialog(frame,
-//                                     "You have no groups :(");
-//                         }
-//                         break;
+                     case 2:
+                         t = new TableInfo(currentUser.groups());
+                         if (t.columns != null) {
+                             updateTable(userGroupTable, userGroupTableModel, t.rowData, t.columns);
+                         } else {
+                             JOptionPane.showMessageDialog(frame,
+                                     "You have no groups :(");
+                         }
+                         break;
                      default:
                          break;
 
@@ -683,7 +663,7 @@ public class DatabaseFrame{
         ownedGames.addActionListener((ActionEvent e) -> {
             TableInfo t = new TableInfo(currentUser.games());
             if (t.columns != null){
-                swapTable(gameUserTable, gameUserTableModel, t.rowData, t.columns);
+                updateTable(gameUserTable, gameUserTableModel, t.rowData, t.columns);
             } else {
                 JOptionPane.showMessageDialog(frame,
                         "You have no games :(");
