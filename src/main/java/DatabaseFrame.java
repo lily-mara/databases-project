@@ -48,6 +48,8 @@ public class DatabaseFrame{
 
     private JLabel gameNameLabel;
     private JScrollPane gameTableScrollPane;
+
+    private JPanel addFriendPanel;
     private JTextField addFriendText;
     private JButton addFriendButton;
     private JButton removeFriend;
@@ -334,7 +336,7 @@ public class DatabaseFrame{
 
 
         addFriendText = new JTextField("New Friend", 10);
-        JPanel addFriendPanel = new JPanel();
+        addFriendPanel = new JPanel();
         addFriendPanel.add(addFriendText);
         addFriendPanel.add(addFriendButton);
         addFriendPanel.add(removeFriend);
@@ -518,11 +520,11 @@ public class DatabaseFrame{
         // Add a back button to return to the friend's list
         backToFriends = new JButton("Back");
         backToFriends.addActionListener(e -> {
-            friendListPanel.setVisible(true);
+            userScreen.setSelectedIndex(1);
+            userTabbedPane.setVisible(true);
+            topPanel.setVisible(true);
+            addFriendPanel.setVisible(true);
             friendPagePanel.setVisible(false);
-            friendUserTable.setVisible(true);
-            gameUserTable.setVisible(false);
-            //friendTableScrollPane.setVisible(true);
         });
         friendPagePanel.add(backToFriends);
     }
@@ -538,11 +540,12 @@ public class DatabaseFrame{
         // Add a back button to return to the store
         backToStore = new JButton("Back");
         backToStore.addActionListener(e -> {
-            //gameListPanel.setVisible(true);
-            gamePagePanel.setVisible(false);
-            gameTableScrollPanel.setVisible(true);
+            userScreen.setSelectedIndex(0);
             gameListPanel.setVisible(true);
-            gameTable.setVisible(true);
+           // gameTable.setVisible(true);
+            gameTableScrollPanel.setVisible(true);
+            gamePagePanel.setVisible(false);
+
         });
         gamePagePanel.add(backToStore);
 
@@ -575,6 +578,9 @@ public class DatabaseFrame{
 
     private void updateFriendPagePanel(String friendName) {
         friendNameLabel.setText(friendName);
+        addFriendPanel.setVisible(false);
+        userTabbedPane.setVisible(false);
+        topPanel.setVisible(false);
         friendPagePanel.setVisible(true);
     }
 
@@ -626,6 +632,7 @@ public class DatabaseFrame{
                  TableInfo t;
                  switch(currentUser == null ? -1 : userTabbedPane.getSelectedIndex()) {
                      case 0:
+                         addFriendPanel.setVisible(true);
                          t = new TableInfo(currentUser.friends());
                          if (t.columns != null) {
                              updateTable(friendUserTable, friendUserTableModel, t.rowData, t.columns);
@@ -635,6 +642,7 @@ public class DatabaseFrame{
                          }
                          break;
                      case 1:
+                         addFriendPanel.setVisible(false);
                          t = new TableInfo(currentUser.games());
                          if (t.columns != null) {
                              updateTable(gameUserTable, gameUserTableModel, t.rowData, t.columns);
@@ -644,6 +652,7 @@ public class DatabaseFrame{
                          }
                          break;
                      case 2:
+                         addFriendPanel.setVisible(false);
                          t = new TableInfo(currentUser.groups());
                          if (t.columns != null) {
                              updateTable(userGroupTable, userGroupTableModel, t.rowData, t.columns);
@@ -658,21 +667,6 @@ public class DatabaseFrame{
                  }
              }
          });
-
-      /*  ownedGames = new JButton("My Games");
-        ownedGames.addActionListener((ActionEvent e) -> {
-            TableInfo t = new TableInfo(currentUser.games());
-            if (t.columns != null){
-                updateTable(gameUserTable, gameUserTableModel, t.rowData, t.columns);
-            } else {
-                JOptionPane.showMessageDialog(frame,
-                        "You have no games :(");
-            }
-            //friendUserTable.setVisible(false);
-            friendTableScrollPanel.setVisible(false);
-            //gameUserTable.setVisible(true);
-            gameTableScrollPanel.setVisible(true);
-        }); */
 
         addFriendButton = new JButton("Add");
         addFriendButton.addActionListener((ActionEvent e)->{
