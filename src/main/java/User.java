@@ -240,7 +240,6 @@ public class User extends Model {
 
     public List<UserGroup> groups() {
         List groupList = new ArrayList<UserGroup>();
-        UserGroup currentGroup = new UserGroup();
 
         try {
             Statement statement = c.createStatement();
@@ -249,10 +248,7 @@ public class User extends Model {
             ResultSet rs = statement.executeQuery("SELECT Name, User_Review.id FROM FRIEND JOIN USER WHERE User1 = " + id);
 
             while (rs.next()) {         // read the result set
-                currentGroup.name = rs.getString("name");
-                currentGroup.id = rs.getInt("id");
-
-                groupList.add(currentGroup);
+                groupList.add(new UserGroup(rs));
             }
         }catch(SQLException e){
             System.err.println(e);
