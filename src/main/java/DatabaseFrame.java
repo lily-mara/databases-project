@@ -447,7 +447,7 @@ public class DatabaseFrame{
                 JTable table =(JTable) me.getSource();
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
-                int gameId = (Integer) table.getValueAt(row, 1);
+                int gameId = Integer.parseInt(table.getValueAt(row, 1).toString());
                 currentGame = Game.getGameById(gameId);
                 if (me.getClickCount() == 2) {
                     userScreen.setSelectedIndex(0);
@@ -478,7 +478,7 @@ public class DatabaseFrame{
                 JTable table =(JTable) me.getSource();
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
-                int gameId = (Integer) table.getValueAt(row, 1);
+                int gameId = Integer.parseInt(table.getValueAt(row, 1).toString());
                 currentGame = Game.getGameById(gameId);
                 if (me.getClickCount() == 2) {
                     // your valueChanged overridden method
