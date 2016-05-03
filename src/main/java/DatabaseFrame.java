@@ -81,6 +81,13 @@ public class DatabaseFrame{
     private JPanel card2;
     private JTabbedPane userTabbedPane;
 
+    // USER Group panel
+    private JTable userGroupTable;
+    private DefaultTableModel userGroupTableModel;
+    private JButton backToUserGroups;
+    private JButton showUserGroups;
+
+
     public DatabaseFrame() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -342,7 +349,8 @@ public class DatabaseFrame{
         userTabbedPane.addTab("My Friends", friendTableScrollPanel);
         JScrollPane gameTableScrollPanel = new JScrollPane(gameUserTable);
         userTabbedPane.addTab("My Games", gameTableScrollPanel);
-
+        JScrollPane userGroupScrollPanel = new JScrollPane(userGroupTable);
+        userTabbedPane.addTab("My Groups", userGroupScrollPanel);
 
 
 
@@ -411,11 +419,12 @@ public class DatabaseFrame{
         gameTable = new JTable();
         friendUserTable = new JTable();
         gameUserTable = new JTable();
+//        userGroupTable = new JTable();
 
         friendUserTableModel = new DefaultTableModel(0, 0);
         gameUserTableModel = new DefaultTableModel(0,0);
         gameTableModel = new DefaultTableModel(0, 0);
-
+//        userGroupTableModel = new DefaultTableModel(0, 0);
 
         // Double click on a user's friend's name
         friendUserTable.addMouseListener(new MouseAdapter() {
@@ -446,6 +455,22 @@ public class DatabaseFrame{
                 }
             }
         });
+
+        // Double click on Group
+//        userGroupTable.addMouseListener(new MouseAdapter() {
+//            public void mousePressed(MouseEvent me) {
+//                JTable table =(JTable) me.getSource();
+//                Point p = me.getPoint();
+//                int row = table.rowAtPoint(p);
+//                String rowItem = (String) table.getValueAt(row, 0);
+//                if (me.getClickCount() == 2) {
+//                    friendUserTable.setVisible(false);
+//
+//                    updateFriendPagePanel(rowItem);
+//                    friendPagePanel.setVisible(true);
+//                }
+//            }
+//        });
 
         // Double click on a game title
         gameTable.addMouseListener(new MouseAdapter() {
@@ -638,6 +663,15 @@ public class DatabaseFrame{
                                      "You have no games :(");
                          }
                          break;
+//                     case 2:
+//                         t = new TableInfo(currentUser.groups());
+//                         if (t.columns != null) {
+//                             swapTable(userGroupTable, userGroupTableModel, t.rowData, t.columns);
+//                         } else {
+//                             JOptionPane.showMessageDialog(frame,
+//                                     "You have no groups :(");
+//                         }
+//                         break;
                      default:
                          break;
 

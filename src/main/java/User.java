@@ -245,7 +245,9 @@ public class User extends Model {
             Statement statement = c.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-            ResultSet rs = statement.executeQuery("SELECT Name, User_Review.id FROM FRIEND JOIN USER WHERE User1 = " + id);
+            PreparedStatement s = c.prepareStatement("SELECT USER_GROUP.name FROM USER_GROUP WHERE Id=?");
+            s.setInt(1,id);
+            ResultSet rs = s.executeQuery();
 
             while (rs.next()) {         // read the result set
                 groupList.add(new UserGroup(rs));
