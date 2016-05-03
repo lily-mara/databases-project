@@ -245,7 +245,7 @@ public class User extends Model {
             Statement statement = c.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-            PreparedStatement s = c.prepareStatement("SELECT USER_GROUP.name FROM USER_GROUP WHERE Id=?");
+            PreparedStatement s = c.prepareStatement("SELECT Name, Id FROM USER_GROUP WHERE Id=?");
             s.setInt(1,id);
             ResultSet rs = s.executeQuery();
 
