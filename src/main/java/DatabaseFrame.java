@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.awt.event.*;
+import java.net.URL;
 
 
 /**
@@ -89,7 +90,6 @@ public class DatabaseFrame{
     private JButton backToUserGroups;
     private JButton showUserGroups;
 
-
     public DatabaseFrame() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -102,7 +102,7 @@ public class DatabaseFrame{
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        frame = new JFrame("Database Frame");
+        frame = new JFrame("Mist");
         panel = new JPanel();
         descriptionLabel = new JLabel("Welcome to the DB");
         searchSubmit = new JButton("Search");
@@ -727,5 +727,16 @@ public class DatabaseFrame{
         });
 
 
+    }
+
+    private static Image createImage(String path, String description) {
+        URL imageURL = DatabaseFrame.class.getResource(path);
+
+        if (imageURL == null) {
+        System.err.println("Resource not found: " + path);
+            return null;
+        } else {
+            return (new ImageIcon(path, description)).getImage();
+        }
     }
 }
