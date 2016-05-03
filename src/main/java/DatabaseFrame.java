@@ -48,6 +48,8 @@ public class DatabaseFrame{
 
     private JLabel gameNameLabel;
     private JScrollPane gameTableScrollPane;
+
+    private JPanel addFriendPanel;
     private JTextField addFriendText;
     private JButton addFriendButton;
     private JButton removeFriend;
@@ -334,7 +336,7 @@ public class DatabaseFrame{
 
 
         addFriendText = new JTextField("New Friend", 10);
-        JPanel addFriendPanel = new JPanel();
+        addFriendPanel = new JPanel();
         addFriendPanel.add(addFriendText);
         addFriendPanel.add(addFriendButton);
         addFriendPanel.add(removeFriend);
@@ -345,9 +347,9 @@ public class DatabaseFrame{
         card2.add(topPanel);
 
 
-        JScrollPane friendTableScrollPanel = new JScrollPane(friendUserTable);
+        friendTableScrollPanel = new JScrollPane(friendUserTable);
         userTabbedPane.addTab("My Friends", friendTableScrollPanel);
-        JScrollPane gameTableScrollPanel = new JScrollPane(gameUserTable);
+        gameTableScrollPanel = new JScrollPane(gameUserTable);
         userTabbedPane.addTab("My Games", gameTableScrollPanel);
         JScrollPane userGroupScrollPanel = new JScrollPane(userGroupTable);
         userTabbedPane.addTab("My Groups", userGroupScrollPanel);
@@ -419,12 +421,12 @@ public class DatabaseFrame{
         gameTable = new JTable();
         friendUserTable = new JTable();
         gameUserTable = new JTable();
-        userGroupTable = new JTable();
+//        userGroupTable = new JTable();
 
         friendUserTableModel = new DefaultTableModel(0, 0);
         gameUserTableModel = new DefaultTableModel(0,0);
         gameTableModel = new DefaultTableModel(0, 0);
-        userGroupTableModel = new DefaultTableModel(0, 0);
+//        userGroupTableModel = new DefaultTableModel(0, 0);
 
         // Double click on a user's friend's name
         friendUserTable.addMouseListener(new MouseAdapter() {
@@ -434,27 +436,25 @@ public class DatabaseFrame{
                 int row = table.rowAtPoint(p);
                 String rowItem = (String) table.getValueAt(row, 0);
                 if (me.getClickCount() == 2) {
-                    friendUserTable.setVisible(false);
                     updateFriendPagePanel(rowItem);
-                    friendPagePanel.setVisible(true);
                 }
             }
         });
 
         // Double click on user's game title
-        gameUserTable.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent me) {
-                JTable table =(JTable) me.getSource();
-                Point p = me.getPoint();
-                int row = table.rowAtPoint(p);
-                int gameId = (Integer) table.getValueAt(row, 1);
-                currentGame = Game.getGameById(gameId);
-                if (me.getClickCount() == 2) {
-                    userScreen.setSelectedIndex(0);
-                    updateGamePagePanel(currentGame);
-                }
-            }
-        });
+//        gameUserTable.addMouseListener(new MouseAdapter() {
+//            public void mousePressed(MouseEvent me) {
+//                JTable table =(JTable) me.getSource();
+//                Point p = me.getPoint();
+//                int row = table.rowAtPoint(p);
+//                int gameId = (Integer) table.getValueAt(row, 1);
+//                currentGame = Game.getGameById(gameId);
+//                if (me.getClickCount() == 2) {
+//                    userScreen.setSelectedIndex(0);
+//                    updateGamePagePanel(currentGame);
+//                }
+//            }
+//        });
 
         // Double click on Group
         userGroupTable.addMouseListener(new MouseAdapter() {
@@ -464,10 +464,10 @@ public class DatabaseFrame{
                 int row = table.rowAtPoint(p);
                 String rowItem = (String) table.getValueAt(row, 0);
                 if (me.getClickCount() == 2) {
-                    friendUserTable.setVisible(false);
+                    userGroupTable.setVisible(false);
 
                     updateFriendPagePanel(rowItem);
-                    friendPagePanel.setVisible(true);
+                  //  userGroupPanel.setVisible(true);
                 }
             }
         });
@@ -575,6 +575,10 @@ public class DatabaseFrame{
 
     private void updateFriendPagePanel(String friendName) {
         friendNameLabel.setText(friendName);
+        userTabbedPane.setVisible(false);
+        topPanel.setVisible(false);
+        addFriendPanel.setVisible(false);
+        friendUserTable.setVisible(false);
         friendPagePanel.setVisible(true);
     }
 
@@ -582,9 +586,15 @@ public class DatabaseFrame{
         gameListPanel.setVisible(false);
         gameTableScrollPanel.setVisible(false);
         gameTable.setVisible(false);
+
         gameNameLabel.setText(game.name);
+        JLabel price = new JLabel(String.format("$%.2f", game.price));
+        gamePagePanel.add(price);
+        
+
         gamePagePanel.setVisible(true);
     }
+
 
     private void createButtons() {
         goButton = new JButton("Go!");
