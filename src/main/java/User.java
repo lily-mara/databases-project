@@ -203,7 +203,9 @@ public class User extends Model {
             u.game = g;
             u.text = text;
 
-            u.create();
+            if(!u.create()) {
+                return null;
+            }
 
             return u;
         } else {

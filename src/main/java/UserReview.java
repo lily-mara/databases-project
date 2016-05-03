@@ -18,7 +18,7 @@ public class UserReview extends Model implements Review {
         return rating;
     }
 
-    public void create() {
+    public boolean create() {
         try {
             PreparedStatement s = c.prepareStatement(
                     "insert into USER_REVIEW (Game_id, Rating, User_id, Text) values (?,?,?,?)"
@@ -31,7 +31,9 @@ public class UserReview extends Model implements Review {
             s.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public String getText() {

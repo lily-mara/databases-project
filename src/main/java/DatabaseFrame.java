@@ -81,8 +81,6 @@ public class DatabaseFrame{
     private JPanel card2;
     private JTabbedPane userTabbedPane;
 
-
-
     public DatabaseFrame() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -540,7 +538,7 @@ public class DatabaseFrame{
         backToStore.addActionListener(e -> {
             gameListPanel.setVisible(true);
             gamePagePanel.setVisible(false);
-            gameTableScrollPane.setVisible(true);
+            gameTableScrollPanel.setVisible(true);
         });
         gamePagePanel.add(backToStore);
 
@@ -682,7 +680,10 @@ public class DatabaseFrame{
 
         gameReviewSubmit = new JButton("Submit");
         gameReviewSubmit.addActionListener((ActionEvent e)->{
-            currentUser.writeReview(currentGame, (int)gameRating.getSelectedItem(), addReview.getText());
+            UserReview r = currentUser.writeReview(currentGame, (int)gameRating.getSelectedItem(), addReview.getText());
+            if(r == null) {
+                JOptionPane.showMessageDialog(frame, String.format("Sorry %s, I'm afraid I can't let you do that.", currentUser.realName));
+            }
             updateGamePagePanel(currentGame);
         });
     }
