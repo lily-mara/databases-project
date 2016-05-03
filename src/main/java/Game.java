@@ -178,4 +178,13 @@ public class Game extends Model {
     public String toString() {
         return String.format("Game <name=%s>", name);
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Game) {
+            Game g = (Game) other;
+            return g.id == id;
+        }
+        return false;
+    }
 }
