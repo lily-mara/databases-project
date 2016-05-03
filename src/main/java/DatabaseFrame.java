@@ -26,12 +26,14 @@ public class DatabaseFrame{
     private JTabbedPane userScreen;
     private JButton friends;
     private JButton ownedGames;
-    private JTable userTable;
-    private DefaultTableModel userTableModel;
+    private JTable friendUserTable;
+    private JTable gameUserTable;
+    private DefaultTableModel friendUserTableModel;
+    private DefaultTableModel gameUserTableModel;
     private JPanel friendListPanel;
     private JPanel friendPagePanel;
     private JLabel friendNameLabel;
-    private JScrollPane friendTableScrollPane;
+    private JScrollPane friendTableScrollPanel;
     private JButton backToFriends;
     private JScrollPane gameTableScrollPanel;
     private JPanel gameListPanel;
@@ -300,15 +302,14 @@ public class DatabaseFrame{
 
         card1.add(gameListPanel);
         card1.add(gamePagePanel);
-        gameTableScrollPane = new JScrollPane(gameTable);
-        card1.add(gameTableScrollPane);
+        gameTableScrollPanel = new JScrollPane(gameTable);
+        card1.add(gameTableScrollPanel);
 
         card1.setLayout(new BoxLayout(card1, BoxLayout.Y_AXIS));
 
         // User Page
         createFriendPagePanel();
         friendPagePanel.setVisible(false);
-
 
         JPanel card2 = new JPanel();
         card2.add(friendPagePanel);
@@ -327,7 +328,15 @@ public class DatabaseFrame{
         topPanel.add(ownedGames);
         card2.add(topPanel);
 
-        card2.add(new JScrollPane(userTable));
+        JScrollPane friendTableScrollPanel = new JScrollPane(friendUserTable);
+        card2.add(friendTableScrollPanel);
+        JScrollPane gameTableScrollPanel = new JScrollPane(gameUserTable);
+        card2.add(gameTableScrollPanel);
+
+
+        card2.setComponentZOrder(friendTableScrollPanel, 2);
+        card2.setComponentZOrder(gameTableScrollPanel, 2);
+
         card2.add(addFriendPanel);
         card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
 
@@ -385,19 +394,39 @@ public class DatabaseFrame{
 
     private void createTable() {
         gameTable = new JTable();
-        userTable = new JTable();
+        friendUserTable = new JTable();
+        gameUserTable = new JTable();
+
+        friendUserTableModel = new DefaultTableModel(0, 0);
+        gameUserTableModel = new DefaultTableModel(0,0);
         gameTableModel = new DefaultTableModel(0, 0);
-        userTableModel = new DefaultTableModel(0, 0);
 
 
-        userTable.addMouseListener(new MouseAdapter() {
+        // Double click on a user's friend's name
+        friendUserTable.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent me) {
                 JTable table =(JTable) me.getSource();
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
                 String rowItem = (String) table.getValueAt(row, 0);
                 if (me.getClickCount() == 2) {
-                    userTable.setVisible(false);
+                    friendUserTable.setVisible(false);
+                    updateFriendPagePanel(rowItem);
+                    friendPagePanel.setVisible(true);
+                }
+            }
+        });
+
+        // Double click on user's game title
+        gameUserTable.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                JTable table =(JTable) me.getSource();
+                Point p = me.getPoint();
+                int row = table.rowAtPoint(p);
+                String rowItem = (String) table.getValueAt(row, 0);
+                if (me.getClickCount() == 2) {
+                    friendUserTable.setVisible(false);
+
                     updateFriendPagePanel(rowItem);
                     friendPagePanel.setVisible(true);
                 }
@@ -417,7 +446,7 @@ public class DatabaseFrame{
                     gameListPanel.setVisible(false);
                     updateGamePagePanel(currentGame.name);
                     gamePagePanel.setVisible(true);
-                    gameTableScrollPane.setVisible(false);
+                    gameTableScrollPanel.setVisible(false);
                 }
             }
         });
@@ -443,6 +472,27 @@ public class DatabaseFrame{
         }
     }
 
+    public void swapTable(JTable cTable, DefaultTableModel model, Object rowData[][], Object columns[]){
+        if(rowData == null || columns == null)
+            return;
+
+        model.setColumnIdentifiers(columns);
+        cTable.setModel(model);
+
+        // Remove Rows
+        if (model.getRowCount() > 0) {
+            for (int i = model.getRowCount() - 1; i > -1; i--) {
+                model.removeRow(i);
+            }
+        }
+
+        // Add new rows
+        for(int r = 0; r < rowData.length; r++) {
+            model.addRow(rowData[r]);
+        }
+
+    }
+
     private void createFriendPagePanel() {
         friendPagePanel = new JPanel();
         friendNameLabel = new JLabel("Friend Default Name");
@@ -453,7 +503,8 @@ public class DatabaseFrame{
         backToFriends.addActionListener(e -> {
             friendListPanel.setVisible(true);
             friendPagePanel.setVisible(false);
-            userTable.setVisible(true);
+            friendUserTable.setVisible(true);
+            gameUserTable.setVisible(false);
             //friendTableScrollPane.setVisible(true);
         });
         friendPagePanel.add(backToFriends);
@@ -523,21 +574,31 @@ public class DatabaseFrame{
         friends.addActionListener((ActionEvent e) -> {
             TableInfo t = new TableInfo(currentUser.friends());
             if(t.columns != null) {
-                replaceTable(userTable, userTableModel, t.rowData, t.columns);
+                swapTable(friendUserTable, friendUserTableModel, t.rowData, t.columns);
             } else {
                 JOptionPane.showMessageDialog(frame,
                         "You have no friends :(");
             }
-        });
+            //friendUserTable.setVisible(true);
+            friendTableScrollPanel.setVisible(true);
+            //gameUserTable.setVisible(false);
+            gameTableScrollPanel.setVisible(false);
+        }
+        );
 
         ownedGames = new JButton("My Games");
         ownedGames.addActionListener((ActionEvent e) -> {
             TableInfo t = new TableInfo(currentUser.games());
-            if (t.columns != null)
-                replaceTable(userTable, userTableModel, t.rowData, t.columns);
-            else
+            if (t.columns != null){
+                swapTable(gameUserTable, gameUserTableModel, t.rowData, t.columns);
+            } else {
                 JOptionPane.showMessageDialog(frame,
                         "You have no games :(");
+            }
+            //friendUserTable.setVisible(false);
+            friendTableScrollPanel.setVisible(false);
+            //gameUserTable.setVisible(true);
+            gameTableScrollPanel.setVisible(true);
         });
 
         addFriendButton = new JButton("Add");
@@ -553,8 +614,8 @@ public class DatabaseFrame{
 
         removeFriend = new JButton("Remove Selected Friend");
         removeFriend.addActionListener((ActionEvent e)->{
-            int row = userTable.getSelectedRow();
-            String friendName = (String) userTable.getValueAt(row,1);
+            int row = friendUserTable.getSelectedRow();
+            String friendName = (String) friendUserTable.getValueAt(row,1);
             int friendId = User.getUserByProfileName(friendName).id;
             currentUser.removeFriend(friendId);
             friends.doClick();
