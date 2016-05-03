@@ -438,12 +438,11 @@ public class DatabaseFrame{
                 JTable table =(JTable) me.getSource();
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
-                String rowItem = (String) table.getValueAt(row, 0);
+                int gameId = (Integer) table.getValueAt(row, 1);
+                currentGame = Game.getGameById(gameId);
                 if (me.getClickCount() == 2) {
-                    friendUserTable.setVisible(false);
-
-                    updateFriendPagePanel(rowItem);
-                    friendPagePanel.setVisible(true);
+                    userScreen.setSelectedIndex(0);
+                    updateGamePagePanel(currentGame);
                 }
             }
         });
@@ -458,10 +457,8 @@ public class DatabaseFrame{
                 currentGame = Game.getGameById(gameId);
                 if (me.getClickCount() == 2) {
                     // your valueChanged overridden method
-                    gameListPanel.setVisible(false);
+
                     updateGamePagePanel(currentGame);
-                    gamePagePanel.setVisible(true);
-                    gameTableScrollPanel.setVisible(false);
                 }
             }
         });
@@ -536,9 +533,11 @@ public class DatabaseFrame{
         // Add a back button to return to the store
         backToStore = new JButton("Back");
         backToStore.addActionListener(e -> {
-            gameListPanel.setVisible(true);
+            //gameListPanel.setVisible(true);
             gamePagePanel.setVisible(false);
             gameTableScrollPanel.setVisible(true);
+            gameListPanel.setVisible(true);
+            gameTable.setVisible(true);
         });
         gamePagePanel.add(backToStore);
 
@@ -575,6 +574,9 @@ public class DatabaseFrame{
     }
 
     private void updateGamePagePanel(Game game) {
+        gameListPanel.setVisible(false);
+        gameTableScrollPanel.setVisible(false);
+        gameTable.setVisible(false);
         gameNameLabel.setText(game.name);
         gamePagePanel.setVisible(true);
     }
