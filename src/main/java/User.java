@@ -195,7 +195,7 @@ public class User extends Model {
         return games().contains(g);
     }
 
-    public UserReview writeReview(Game g, double rating, String text) {
+    public UserReview writeReview(Game g, int rating, String text) {
         if (owns(g)) {
             UserReview u = new UserReview();
             u.rating = rating;

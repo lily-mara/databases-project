@@ -36,8 +36,14 @@ public class DatabaseFrame{
     private JScrollPane friendTableScrollPanel;
     private JButton backToFriends;
     private JScrollPane gameTableScrollPanel;
+
+    private JTextArea addReview;
     private JPanel gameListPanel;
     private JPanel gamePagePanel;
+    private JPanel reviewsPanel;
+    private JButton gameReviewSubmit;
+    private JComboBox<Integer> gameRating;
+
     private JLabel gameNameLabel;
     private JScrollPane gameTableScrollPane;
     private JTextField addFriendText;
@@ -444,7 +450,7 @@ public class DatabaseFrame{
                 if (me.getClickCount() == 2) {
                     // your valueChanged overridden method
                     gameListPanel.setVisible(false);
-                    updateGamePagePanel(currentGame.name);
+                    updateGamePagePanel(currentGame);
                     gamePagePanel.setVisible(true);
                     gameTableScrollPanel.setVisible(false);
                 }
@@ -513,6 +519,7 @@ public class DatabaseFrame{
     //Navigated to, through store panel
     private void createGamePagePanel() {
         gamePagePanel = new JPanel();
+        gamePagePanel.setLayout(new BoxLayout(gamePagePanel, BoxLayout.Y_AXIS));
         gameNameLabel = new JLabel("This shouldn't be showing yet");
         gamePagePanel.add(gameNameLabel);
         gamePagePanel.add(purchaseButton);
@@ -525,6 +532,32 @@ public class DatabaseFrame{
             gameTableScrollPane.setVisible(true);
         });
         gamePagePanel.add(backToStore);
+
+
+        reviewsPanel = new JPanel();
+
+        addReview = new JTextArea("Add a review", 3, 30);
+        addReview.setPreferredSize(new Dimension(3, 30));
+        addReview.setLineWrap(true);
+        addReview.setEditable(true);
+
+        gameRating = new JComboBox<Integer>();
+        gameRating.addItem(1);
+        gameRating.addItem(2);
+        gameRating.addItem(3);
+        gameRating.addItem(4);
+        gameRating.addItem(5);
+        gameRating.addItem(6);
+        gameRating.addItem(7);
+        gameRating.addItem(8);
+        gameRating.addItem(9);
+        gameRating.addItem(10);
+
+        reviewsPanel.add(addReview);
+        reviewsPanel.add(gameRating);
+        reviewsPanel.add(gameReviewSubmit);
+
+        gamePagePanel.add(reviewsPanel);
     }
 
     private void updateFriendPagePanel(String friendName) {
@@ -532,8 +565,8 @@ public class DatabaseFrame{
         friendPagePanel.setVisible(true);
     }
 
-    private void updateGamePagePanel(String gameName) {
-        gameNameLabel.setText(gameName);
+    private void updateGamePagePanel(Game game) {
+        gameNameLabel.setText(game.name);
         gamePagePanel.setVisible(true);
     }
 
@@ -620,6 +653,12 @@ public class DatabaseFrame{
             currentUser.removeFriend(friendId);
             friends.doClick();
         });
+
+        gameReviewSubmit = new JButton("Submit");
+        gameReviewSubmit.addActionListener((ActionEvent e)->{
+            currentUser.writeReview(currentGame, (int)gameRating.getSelectedItem(), addReview.getText());
+            updateGamePagePanel(currentGame);
+        });
     }
 
     private void createProfileScreen(){
@@ -649,5 +688,7 @@ public class DatabaseFrame{
             CreditCard.setText(currentUser.getCreditCard());
             Phone.setText(currentUser.getPhone());
         });
+
+
     }
 }
