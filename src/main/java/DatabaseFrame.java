@@ -419,12 +419,12 @@ public class DatabaseFrame{
         gameTable = new JTable();
         friendUserTable = new JTable();
         gameUserTable = new JTable();
-//        userGroupTable = new JTable();
+        userGroupTable = new JTable();
 
         friendUserTableModel = new DefaultTableModel(0, 0);
         gameUserTableModel = new DefaultTableModel(0,0);
         gameTableModel = new DefaultTableModel(0, 0);
-//        userGroupTableModel = new DefaultTableModel(0, 0);
+        userGroupTableModel = new DefaultTableModel(0, 0);
 
         // Double click on a user's friend's name
         friendUserTable.addMouseListener(new MouseAdapter() {
@@ -457,20 +457,20 @@ public class DatabaseFrame{
         });
 
         // Double click on Group
-//        userGroupTable.addMouseListener(new MouseAdapter() {
-//            public void mousePressed(MouseEvent me) {
-//                JTable table =(JTable) me.getSource();
-//                Point p = me.getPoint();
-//                int row = table.rowAtPoint(p);
-//                String rowItem = (String) table.getValueAt(row, 0);
-//                if (me.getClickCount() == 2) {
-//                    friendUserTable.setVisible(false);
-//
-//                    updateFriendPagePanel(rowItem);
-//                    friendPagePanel.setVisible(true);
-//                }
-//            }
-//        });
+        userGroupTable.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                JTable table =(JTable) me.getSource();
+                Point p = me.getPoint();
+                int row = table.rowAtPoint(p);
+                String rowItem = (String) table.getValueAt(row, 0);
+                if (me.getClickCount() == 2) {
+                    friendUserTable.setVisible(false);
+
+                    updateFriendPagePanel(rowItem);
+                    friendPagePanel.setVisible(true);
+                }
+            }
+        });
 
         // Double click on a game title
         gameTable.addMouseListener(new MouseAdapter() {
