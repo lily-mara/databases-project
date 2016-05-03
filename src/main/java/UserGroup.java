@@ -30,6 +30,24 @@ public class UserGroup extends Model {
         create();
     }
 
+    public static UserGroup getUserGroupByName(String name) {
+        try {
+            PreparedStatement s = c.prepareStatement("SELECT Id, Name FROM user_group WHERE Name=?");
+            s.setString(1, name);
+
+            ResultSet rs = s.executeQuery();
+
+            if (rs.next()) {
+                return new UserGroup(rs);
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static int nextId() {
         try {
             PreparedStatement s = c.prepareStatement("SELECT MAX(id) FROM user_group");
