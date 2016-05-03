@@ -90,6 +90,10 @@ public class DatabaseFrame{
     private JButton backToUserGroups;
     private JButton showUserGroups;
 
+    // Login panel
+    final JLabel invalidPasswordWarning = new JLabel("Invalid password!");
+    final JLabel userNotFoundWarning = new JLabel("User not found!");
+
     public DatabaseFrame() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -200,20 +204,35 @@ public class DatabaseFrame{
         newUserPanel.setVisible(false);
     }
 
+    private void login(String username, String password) {
+        currentUser = User.getUserByProfileName(username);
+        if(currentUser != null) {
+            if (currentUser.isPasswordValid(password)) {
+                loginScreen.setVisible(false);
+                userGreeting.setText("Hello " + currentUser.realName);
+                userScreen.setVisible(true);
+                restore.doClick();
+            } else {
+                invalidPasswordWarning.setVisible(true);
+            }
+        }
+        else {
+            userNotFoundWarning.setVisible(true);
+        }
+    }
+
     private void createLoginScreen() {
         loginScreen = new JPanel();
 
+        userNotFoundWarning.setForeground(Color.red);
+        userNotFoundWarning.setVisible(false);
+
+        invalidPasswordWarning.setForeground(Color.red);
+        invalidPasswordWarning.setVisible(false);
 
         // Create Labels
         JLabel userLabel = new JLabel("Username:");
         JLabel passLabel = new JLabel("Password:");
-        final JLabel userNotFoundWarning = new JLabel("User not found!");
-        userNotFoundWarning.setForeground(Color.red);
-        userNotFoundWarning.setVisible(false);
-
-        final JLabel invalidPasswordWarning = new JLabel("Invalid password!");
-        invalidPasswordWarning.setForeground(Color.red);
-        invalidPasswordWarning.setVisible(false);
 
         // Create Inputs
         final JTextField userNameInput = new JTextField(15);
@@ -222,20 +241,7 @@ public class DatabaseFrame{
         // Button Functionality
         JButton loginButton = new JButton("Login");
         loginButton.addActionListener((ActionEvent e) -> {
-            currentUser = User.getUserByProfileName(userNameInput.getText());
-            if(currentUser != null) {
-                if (currentUser.isPasswordValid(String.valueOf(passInput.getPassword()))) {
-                    loginScreen.setVisible(false);
-                    userGreeting.setText("Hello " + currentUser.realName);
-                    userScreen.setVisible(true);
-                    restore.doClick();
-                } else {
-                    invalidPasswordWarning.setVisible(true);
-                }
-            }
-            else {
-                userNotFoundWarning.setVisible(true);
-            }
+            login(userNameInput.getText(), String.valueOf(passInput.getPassword()));
         });
 
         try {
@@ -254,20 +260,7 @@ public class DatabaseFrame{
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    currentUser = User.getUserByProfileName(userNameInput.getText());
-                    if(currentUser != null) {
-                        if (currentUser.isPasswordValid(String.valueOf(passInput.getPassword()))) {
-                            loginScreen.setVisible(false);
-                            userGreeting.setText("Hello " + currentUser.realName);
-                            userScreen.setVisible(true);
-                            restore.doClick();
-                        } else {
-                            invalidPasswordWarning.setVisible(true);
-                        }
-                    }
-                    else {
-                        userNotFoundWarning.setVisible(true);
-                    }
+                    login(userNameInput.getText(), String.valueOf(passInput.getPassword()));
                 }
             }
 
