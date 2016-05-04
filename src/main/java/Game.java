@@ -11,10 +11,20 @@ public class Game extends Model {
 
     }
 
-    private Game(ResultSet rs) throws SQLException {
-        id = rs.getInt("id");
-        name = rs.getString("name");
-        price = rs.getFloat("price");
+    public Game(ResultSet rs) {
+        try {
+            id = rs.getInt("id");
+            name = rs.getString("name");
+            price = rs.getFloat("price");
+        } catch (SQLException e) {
+            try {
+                id = rs.getInt("game.id");
+                name = rs.getString("game.name");
+                price = rs.getFloat("game.price");
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     public static List<Game> getAllGames() {
@@ -85,11 +95,7 @@ public class Game extends Model {
 
             ResultSet rs = s.executeQuery();
             while (rs.next()) {
-                cat = new Category();
-                cat.id = rs.getInt("id");
-                cat.name = rs.getString("name");
-
-                categories.add(cat);
+                categories.add(new Category(rs));
             }
 
             return categories;

@@ -39,6 +39,7 @@ public class DatabaseFrame{
     private JScrollPane friendTableScrollPanel;
     private JButton backToFriends;
     private JScrollPane gameTableScrollPanel;
+    private GameTableState gameTableState = GameTableState.GAMES;
 
     private JTextArea addReview;
     private JPanel gameListPanel;
@@ -474,12 +475,24 @@ public class DatabaseFrame{
                 JTable table =(JTable) me.getSource();
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
-                int gameId = Integer.parseInt(table.getValueAt(row, 1).toString());
-                currentGame = Game.getGameById(gameId);
-                if (me.getClickCount() == 2) {
-                    // your valueChanged overridden method
 
-                    updateGamePagePanel(currentGame);
+                switch (gameTableState) {
+                    case GAMES:
+                        int gameId = Integer.parseInt(table.getValueAt(row, 1).toString());
+                        currentGame = Game.getGameById(gameId);
+                        if (me.getClickCount() == 2) {
+                            updateGamePagePanel(currentGame);
+                        }
+                    case CATEGORIES:
+                        String categoryName = table.getValueAt(row, 0).toString();
+                        Category category = Category.getCategoryByName(categoryName);
+                        java.util.List<Game> games = category.games();
+
+                        if (games.size() != 0) {
+                            TableInfo t = new TableInfo(category.games());
+                            updateTable(gameTable, gameTableModel, t.rowData, t.columns);
+                            gameTableState = GameTableState.GAMES;
+                        }
                 }
             }
         });
@@ -595,12 +608,14 @@ public class DatabaseFrame{
                     TableInfo t = new TableInfo(Game.getAllGames());
                     updateTable(gameTable, gameTableModel,t.rowData, t.columns);
                     purchaseButton.setVisible(true);
+                    gameTableState = GameTableState.GAMES;
                     break;
                 }
                 case("Show All Categories") : {
                     TableInfo t = new TableInfo(Category.getAllCategories());
                     updateTable(gameTable, gameTableModel, t.rowData, t.columns);
                     purchaseButton.setVisible(false);
+                    gameTableState = GameTableState.CATEGORIES;
                     break;
                 }
             }
