@@ -153,7 +153,7 @@ public class DatabaseFrame{
 
 
         // Setup JFrame
-        frame.setSize(500, 620);
+        frame.setSize(600, 620);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setBackground(Color.WHITE);
 
@@ -646,9 +646,14 @@ public class DatabaseFrame{
         priceLabel.setText(String.format("$%s",game.price));
 
         List<Category> categories = game.categories();
-        for(Category c : categories) {
-            gameCategoryLabel.setText(gameCategoryLabel.getText() + " " + c.name);
+        String labelText = "";
+        for(int i = 0; i < categories.size() - 1; i++) {
+            labelText += categories.get(i).name + ", ";
         }
+        if (categories.size() > 0) {
+            labelText += categories.get(categories.size() - 1).name;
+        }
+        gameCategoryLabel.setText(labelText);
 
         List<Review> reviews = game.reviews();
         for(Review r : reviews) {
