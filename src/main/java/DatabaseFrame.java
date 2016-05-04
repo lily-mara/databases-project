@@ -702,19 +702,19 @@ public class DatabaseFrame{
 
         addGroupButton = new JButton("Add");
         addGroupButton.addActionListener((ActionEvent e)->{
-            //if the group exists
-            if(UserGroup.getUserGroupByName(addGroupText.getText()) != null){
-                UserGroup group = UserGroup.getUserGroupByName(addGroupText.getText());
-                //if you're not already in it
-                if(!currentUser.groups().contains(group)) {
+            UserGroup group = UserGroup.getUserGroupByName(addGroupText.getText());
+            if (group == null){
+                group = new UserGroup(addGroupText.getText());
+                group.addUser(currentUser);
+            } else {
+                if(group.hasMember(currentUser)) {
+                    JOptionPane.showMessageDialog(frame, String.format("You're already in that group!", currentUser.realName));
+                } else {
                     group.addUser(currentUser);
                 }
-                //you're in the group
-                JOptionPane.showMessageDialog(frame, String.format("You're already in that group!", currentUser.realName));
-            }else{
-                UserGroup group = new UserGroup(addGroupText.getText());
-                group.addUser(currentUser);
             }
+            TableInfo t = new TableInfo(currentUser.groups());
+            updateTable(userGroupTable, userGroupTableModel, t.rowData, t.columns);
         });
 
         leaveGroup = new JButton("Remove Selected Group");
@@ -722,7 +722,8 @@ public class DatabaseFrame{
             int row = userGroupTable.getSelectedRow();
             String groupName = (String) userGroupTable.getValueAt(row,0);
             UserGroup.getUserGroupByName(groupName).removeMember(currentUser);
-            //if group is empty, delete the group
+            TableInfo t = new TableInfo(currentUser.groups());
+            updateTable(userGroupTable, userGroupTableModel, t.rowData, t.columns);
         });
 
         gameReviewSubmit = new JButton("Submit");
