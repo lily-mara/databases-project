@@ -607,6 +607,7 @@ public class DatabaseFrame{
     }
 
     private void updateGamePagePanel(Game game) {
+        reviewsPanel.removeAll();
         gameListPanel.setVisible(false);
         gameTableScrollPanel.setVisible(false);
         gameTable.setVisible(false);
