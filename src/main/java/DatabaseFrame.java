@@ -42,6 +42,7 @@ public class DatabaseFrame{
     private JScrollPane gameTableScrollPanel;
     private GameTableState gameTableState = GameTableState.GAMES;
 
+    // Game Page
     private JTextArea addReview;
     private JPanel gameListPanel;
     private JPanel gamePagePanel;
@@ -50,6 +51,8 @@ public class DatabaseFrame{
     private JScrollPane reviewScrollPane;
     private JButton gameReviewSubmit;
     private JComboBox<Integer> gameRating;
+    private JLabel priceLabel;
+    private JLabel gameCategoryLabel;
 
     private JLabel gameNameLabel;
     private JScrollPane gameTableScrollPane;
@@ -547,10 +550,15 @@ public class DatabaseFrame{
 
     //Navigated to, through store panel
     private void createGamePagePanel() {
+        priceLabel = new JLabel("Game price");
+        gameCategoryLabel = new JLabel("Categories:");
         gamePagePanel = new JPanel();
         gamePagePanel.setLayout(new BoxLayout(gamePagePanel, BoxLayout.Y_AXIS));
         gameNameLabel = new JLabel("This shouldn't be showing yet");
+
         gamePagePanel.add(gameNameLabel);
+        gamePagePanel.add(gameCategoryLabel);
+        gamePagePanel.add(priceLabel);
         gamePagePanel.add(purchaseButton);
 
         // Add a back button to return to the store
@@ -609,6 +617,13 @@ public class DatabaseFrame{
         gameTableScrollPanel.setVisible(false);
         gameTable.setVisible(false);
         gameNameLabel.setText(game.name);
+        priceLabel.setText(String.format("$%s",game.price));
+
+        List<Category> categories = game.categories();
+        for(Category c : categories) {
+            gameCategoryLabel.setText(gameCategoryLabel.getText() + " " + c.name);
+        }
+
         List<Review> reviews = game.reviews();
         for(Review r : reviews) {
             String textReview = r.getText();
