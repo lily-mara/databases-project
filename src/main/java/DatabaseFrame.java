@@ -50,10 +50,16 @@ public class DatabaseFrame{
     private JLabel gameNameLabel;
     private JScrollPane gameTableScrollPane;
 
+    private JPanel addGroupPanel;
+    private JTextField addGroupText;
+    private JButton addGroupButton;
+    private JButton removeGroup;
+
     private JPanel addFriendPanel;
     private JTextField addFriendText;
     private JButton addFriendButton;
     private JButton removeFriend;
+
     private JButton backToStore;
     private JButton newUserButton;
 
@@ -334,6 +340,14 @@ public class DatabaseFrame{
         addFriendPanel.add(addFriendButton);
         addFriendPanel.add(removeFriend);
 
+        //addGroupText = new JTextField("New Friend", 10);
+//        addGroupPanel = new JPanel();
+//        addGroupPanel.add(addGroupText);
+//        addGroupPanel.add(addGroupButton);
+//        addGroupPanel.add(removeGroup);
+
+
+
         topPanel = new JPanel();
         topPanel.add(userGreeting);
 
@@ -352,23 +366,10 @@ public class DatabaseFrame{
 
         card2.add(userTabbedPane);
 
-        //card2.setComponentZOrder(friendTableScrollPanel, 2);
-        //card2.setComponentZOrder(gameTableScrollPanel, 2);
 
         card2.add(addFriendPanel);
         card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
 
-        // Create the friend panel
-
-        //createFriendPagePanel();
-        //friendPagePanel.setVisible(false);
-
-        //card2.add(friendListPanel);
-        //card2.add(friendPagePanel);
-        //friendTableScrollPane = new JScrollPane(friendTable);
-        //card2.add(friendTableScrollPane);
-
-        //card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
 
         //Profile settings
         JPanel card3 = new JPanel();
@@ -535,7 +536,7 @@ public class DatabaseFrame{
         backToStore.addActionListener(e -> {
             userScreen.setSelectedIndex(0);
             gameListPanel.setVisible(true);
-           // gameTable.setVisible(true);
+            gameTable.setVisible(true);
             gameTableScrollPanel.setVisible(true);
             gamePagePanel.setVisible(false);
 
