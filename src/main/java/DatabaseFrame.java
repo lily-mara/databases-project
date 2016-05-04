@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.awt.event.*;
 import java.net.URL;
+import java.util.List;
 
 
 /**
@@ -44,7 +45,9 @@ public class DatabaseFrame{
     private JTextArea addReview;
     private JPanel gameListPanel;
     private JPanel gamePagePanel;
+    private JPanel addReviewPanel;
     private JPanel reviewsPanel;
+    private JScrollPane reviewScrollPane;
     private JButton gameReviewSubmit;
     private JComboBox<Integer> gameRating;
 
@@ -557,9 +560,12 @@ public class DatabaseFrame{
 
         });
         gamePagePanel.add(backToStore);
-
-
         reviewsPanel = new JPanel();
+        reviewsPanel.setLayout(new BoxLayout(reviewsPanel, BoxLayout.Y_AXIS));
+        reviewScrollPane = new JScrollPane(reviewsPanel);
+        reviewScrollPane.setPreferredSize(new Dimension(50, 100));
+
+        addReviewPanel = new JPanel();
 
         addReview = new JTextArea("Add a review", 3, 30);
         addReview.setPreferredSize(new Dimension(3, 30));
@@ -578,11 +584,12 @@ public class DatabaseFrame{
         gameRating.addItem(9);
         gameRating.addItem(10);
 
-        reviewsPanel.add(addReview);
-        reviewsPanel.add(gameRating);
-        reviewsPanel.add(gameReviewSubmit);
+        addReviewPanel.add(addReview);
+        addReviewPanel.add(gameRating);
+        addReviewPanel.add(gameReviewSubmit);
 
-        gamePagePanel.add(reviewsPanel);
+        gamePagePanel.add(reviewScrollPane);
+        gamePagePanel.add(addReviewPanel);
     }
 
     private void updateFriendPagePanel(String friendName) {
@@ -598,6 +605,18 @@ public class DatabaseFrame{
         gameTableScrollPanel.setVisible(false);
         gameTable.setVisible(false);
         gameNameLabel.setText(game.name);
+        List<Review> reviews = game.reviews();
+        for(Review r : reviews) {
+            String textReview = r.getText();
+            if(!(textReview == null)) {
+                JTextArea text = new JTextArea(r.getText());
+                text.setLineWrap(true);
+                JScrollPane scroll = new JScrollPane(text);
+                reviewsPanel.add(scroll);
+            }
+            JLabel rating = new JLabel(r.getRating() + "");
+            reviewsPanel.add(rating);
+        }
         gamePagePanel.setVisible(true);
     }
 

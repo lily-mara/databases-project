@@ -139,10 +139,10 @@ public class Game extends Model {
             User u;
 
             PreparedStatement s = c.prepareStatement(
-                    "SELECT rating, text, real_name, profile_name, credit_card, level, phone, user.id" +
-                            "from user_review" +
-                            "join user on user.id=user_review.user_id" +
-                            "where game_id=?"
+                    "SELECT rating, text, real_name, profile_name, credit_card, level, phone, user.id, user.password_hash" +
+                            " from user_review" +
+                            " join user on user.id=user_review.user_id" +
+                            " where game_id=?"
             );
             s.setInt(1, id);
 
