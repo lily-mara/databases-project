@@ -324,8 +324,13 @@ public class User extends Model {
     public boolean addFriend(int friendId){
         try {
             PreparedStatement s = c.prepareStatement("INSERT INTO FRIEND VALUES(?,?)");
-            s.setInt(1, id);
-            s.setInt(2, friendId);
+            if (id < friendId ) {
+                s.setInt(1, id);
+                s.setInt(2, friendId);
+            } else {
+                s.setInt(1,friendId);
+                s.setInt(2,id);
+            }
             s.execute();
             return true;
         }catch(SQLException e){
