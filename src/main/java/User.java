@@ -341,15 +341,14 @@ public class User extends Model {
         return false;
     }
 
-    public boolean removeFriend(int friendId){
+    public boolean removeFriend(User friend){
         try {
             PreparedStatement s = c.prepareStatement("DELETE FROM FRIEND WHERE (User1=? AND User2=?) OR (User1=? AND User2=?)");
             s.setInt(1, id);
-            s.setInt(2, friendId);
-            s.setInt(3, friendId);
+            s.setInt(2, friend.id);
+            s.setInt(3, friend.id);
             s.setInt(4, id);
-            s.execute();
-            return true;
+            return s.execute();
         }catch(SQLException e){
             System.err.println(e);
         }
