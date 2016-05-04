@@ -475,24 +475,27 @@ public class DatabaseFrame{
                 JTable table =(JTable) me.getSource();
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
+                if (me.getClickCount() == 2) {
 
-                switch (gameTableState) {
-                    case GAMES:
-                        int gameId = Integer.parseInt(table.getValueAt(row, 1).toString());
-                        currentGame = Game.getGameById(gameId);
-                        if (me.getClickCount() == 2) {
+                    switch (gameTableState) {
+                        case GAMES:
+                            int gameId = Integer.parseInt(table.getValueAt(row, 1).toString());
+                            currentGame = Game.getGameById(gameId);
+
                             updateGamePagePanel(currentGame);
-                        }
-                    case CATEGORIES:
-                        String categoryName = table.getValueAt(row, 0).toString();
-                        Category category = Category.getCategoryByName(categoryName);
-                        java.util.List<Game> games = category.games();
+                            break;
+                        case CATEGORIES:
+                            String categoryName = table.getValueAt(row, 0).toString();
+                            Category category = Category.getCategoryByName(categoryName);
+                            java.util.List<Game> games = category.games();
 
-                        if (games.size() != 0) {
-                            TableInfo t = new TableInfo(category.games());
-                            updateTable(gameTable, gameTableModel, t.rowData, t.columns);
-                            gameTableState = GameTableState.GAMES;
-                        }
+                            if (games.size() != 0) {
+                                TableInfo t = new TableInfo(category.games());
+                                updateTable(gameTable, gameTableModel, t.rowData, t.columns);
+                                gameTableState = GameTableState.GAMES;
+                            }
+                            break;
+                    }
                 }
             }
         });
