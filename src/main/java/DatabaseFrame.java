@@ -54,7 +54,7 @@ public class DatabaseFrame{
     private JPanel addGroupPanel;
     private JTextField addGroupText;
     private JButton addGroupButton;
-    private JButton removeGroup;
+    private JButton leaveGroup;
 
     private JPanel addFriendPanel;
     private JTextField addFriendText;
@@ -341,11 +341,11 @@ public class DatabaseFrame{
         addFriendPanel.add(addFriendButton);
         addFriendPanel.add(removeFriend);
 
-        //addGroupText = new JTextField("New Friend", 10);
-//        addGroupPanel = new JPanel();
-//        addGroupPanel.add(addGroupText);
-//        addGroupPanel.add(addGroupButton);
-//        addGroupPanel.add(removeGroup);
+        addGroupText = new JTextField("New Group", 10);
+        addGroupPanel = new JPanel();
+        addGroupPanel.add(addGroupText);
+        addGroupPanel.add(addGroupButton);
+        addGroupPanel.add(leaveGroup);
 
 
 
@@ -362,13 +362,11 @@ public class DatabaseFrame{
         JScrollPane userGroupScrollPanel = new JScrollPane(userGroupTable);
         userTabbedPane.addTab("My Groups", userGroupScrollPanel);
 
-
-
-
         card2.add(userTabbedPane);
-
-
         card2.add(addFriendPanel);
+        card2.add(addGroupPanel);
+        addGroupPanel.setVisible(false);
+
         card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
 
 
@@ -534,6 +532,7 @@ public class DatabaseFrame{
             userTabbedPane.setVisible(true);
             topPanel.setVisible(true);
             addFriendPanel.setVisible(true);
+            friendUserTable.setVisible(true);
             friendPagePanel.setVisible(false);
         });
         friendPagePanel.add(backToFriends);
@@ -645,6 +644,7 @@ public class DatabaseFrame{
                  switch(currentUser == null ? -1 : userTabbedPane.getSelectedIndex()) {
                      case 0:
                          addFriendPanel.setVisible(true);
+                         addGroupPanel.setVisible(false);
                          t = new TableInfo(currentUser.friends());
                          if (t.columns != null) {
                              updateTable(friendUserTable, friendUserTableModel, t.rowData, t.columns);
@@ -655,6 +655,7 @@ public class DatabaseFrame{
                          break;
                      case 1:
                          addFriendPanel.setVisible(false);
+                         addGroupPanel.setVisible(false);
                          t = new TableInfo(currentUser.games());
                          if (t.columns != null) {
                              updateTable(gameUserTable, gameUserTableModel, t.rowData, t.columns);
@@ -665,6 +666,7 @@ public class DatabaseFrame{
                          break;
                      case 2:
                          addFriendPanel.setVisible(false);
+                         addGroupPanel.setVisible(true);
                          t = new TableInfo(currentUser.groups());
                          if (t.columns != null) {
                              updateTable(userGroupTable, userGroupTableModel, t.rowData, t.columns);
@@ -688,7 +690,6 @@ public class DatabaseFrame{
             if(User.all().contains(friend) && !currentUser.friends().contains(friend)) {
                 currentUser.addFriend(friend.id);
             }
-            friends.doClick();
         });
 
         removeFriend = new JButton("Remove Selected Friend");
@@ -697,7 +698,31 @@ public class DatabaseFrame{
             String friendName = (String) friendUserTable.getValueAt(row,1);
             int friendId = User.getUserByProfileName(friendName).id;
             currentUser.removeFriend(friendId);
-            friends.doClick();
+        });
+
+        addGroupButton = new JButton("Add");
+        addGroupButton.addActionListener((ActionEvent e)->{
+            //if the group exists
+            if(UserGroup.getUserGroupByName(addGroupText.getText()) != null){
+                UserGroup group = UserGroup.getUserGroupByName(addGroupText.getText());
+                //if you're not already in it
+                if(!currentUser.groups().contains(group)) {
+                    group.addUser(currentUser);
+                }
+                //you're in the group
+                JOptionPane.showMessageDialog(frame, String.format("You're already in that group!", currentUser.realName));
+            }else{
+                UserGroup group = new UserGroup(addGroupText.getText());
+                group.addUser(currentUser);
+            }
+        });
+
+        leaveGroup = new JButton("Remove Selected Group");
+        leaveGroup.addActionListener((ActionEvent e)->{
+            int row = userGroupTable.getSelectedRow();
+            String groupName = (String) userGroupTable.getValueAt(row,0);
+            UserGroup.getUserGroupByName(groupName).removeMember(currentUser);
+            //if group is empty, delete the group
         });
 
         gameReviewSubmit = new JButton("Submit");
