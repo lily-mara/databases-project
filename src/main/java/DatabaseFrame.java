@@ -221,6 +221,10 @@ public class DatabaseFrame{
                 loginScreen.setVisible(false);
                 userGreeting.setText("Hello " + currentUser.realName);
                 userScreen.setVisible(true);
+
+                TableInfo t = new TableInfo(currentUser.friends());
+                updateTable(friendUserTable, friendUserTableModel, t.rowData, t.columns);
+
                 restore.doClick();
             } else {
                 invalidPasswordWarning.setVisible(true);
@@ -705,9 +709,14 @@ public class DatabaseFrame{
         addFriendButton.addActionListener((ActionEvent e)->{
             User friend = User.getUserByProfileName(addFriendText.getText());
 
-            //if the username exists and you're not already friends
-            if(User.all().contains(friend) && !currentUser.friends().contains(friend)) {
+            if (friend == null) {
+                JOptionPane.showMessageDialog(frame, "There is no user with that username");
+            } else if (currentUser.friends().contains(friend)) {
+                JOptionPane.showMessageDialog(frame, "You are already friends with " + friend.profileName);
+            } else {
                 currentUser.addFriend(friend.id);
+                TableInfo t = new TableInfo(currentUser.friends());
+                updateTable(friendUserTable, friendUserTableModel, t.rowData, t.columns);
             }
         });
 
@@ -715,25 +724,34 @@ public class DatabaseFrame{
         removeFriend.addActionListener((ActionEvent e)->{
             int row = friendUserTable.getSelectedRow();
             String friendName = (String) friendUserTable.getValueAt(row,1);
-            int friendId = User.getUserByProfileName(friendName).id;
-            currentUser.removeFriend(friendId);
+            User friend = User.getUserByProfileName(friendName);
+
+            if (friend == null) {
+                JOptionPane.showMessageDialog(frame, "There is no user with that username");
+            } else if (!currentUser.friends().contains(friend)) {
+                JOptionPane.showMessageDialog(frame, "You are not friends with " + friend.profileName);
+            } else {
+                currentUser.removeFriend(friend);
+                TableInfo t = new TableInfo(currentUser.friends());
+                updateTable(friendUserTable, friendUserTableModel, t.rowData, t.columns);
+            }
         });
 
         addGroupButton = new JButton("Add");
         addGroupButton.addActionListener((ActionEvent e)->{
-            //if the group exists
-            if(UserGroup.getUserGroupByName(addGroupText.getText()) != null){
-                UserGroup group = UserGroup.getUserGroupByName(addGroupText.getText());
-                //if you're not already in it
-                if(!currentUser.groups().contains(group)) {
+            UserGroup group = UserGroup.getUserGroupByName(addGroupText.getText());
+            if (group == null){
+                group = new UserGroup(addGroupText.getText());
+                group.addUser(currentUser);
+            } else {
+                if(group.hasMember(currentUser)) {
+                    JOptionPane.showMessageDialog(frame, String.format("You're already in that group!", currentUser.realName));
+                } else {
                     group.addUser(currentUser);
                 }
-                //you're in the group
-                JOptionPane.showMessageDialog(frame, String.format("You're already in that group!", currentUser.realName));
-            }else{
-                UserGroup group = new UserGroup(addGroupText.getText());
-                group.addUser(currentUser);
             }
+            TableInfo t = new TableInfo(currentUser.groups());
+            updateTable(userGroupTable, userGroupTableModel, t.rowData, t.columns);
         });
 
         leaveGroup = new JButton("Remove Selected Group");
@@ -741,7 +759,8 @@ public class DatabaseFrame{
             int row = userGroupTable.getSelectedRow();
             String groupName = (String) userGroupTable.getValueAt(row,0);
             UserGroup.getUserGroupByName(groupName).removeMember(currentUser);
-            //if group is empty, delete the group
+            TableInfo t = new TableInfo(currentUser.groups());
+            updateTable(userGroupTable, userGroupTableModel, t.rowData, t.columns);
         });
 
         gameReviewSubmit = new JButton("Submit");
