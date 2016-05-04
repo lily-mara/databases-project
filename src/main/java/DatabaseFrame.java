@@ -498,6 +498,8 @@ public class DatabaseFrame{
                                 TableInfo t = new TableInfo(category.games());
                                 updateTable(gameTable, gameTableModel, t.rowData, t.columns);
                                 gameTableState = GameTableState.GAMES;
+                            } else {
+                                JOptionPane.showMessageDialog(frame, "There are no games in that category!");
                             }
                             break;
                     }
