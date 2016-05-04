@@ -27,23 +27,22 @@ public class DatabaseFrame{
     private DefaultTableModel gameTableModel;
     private JComboBox dropdown;
     private JTabbedPane userScreen;
-    private JButton friends;
-    private JButton ownedGames;
     private JTable friendUserTable;
     private JTable gameUserTable;
     private DefaultTableModel friendUserTableModel;
     private DefaultTableModel gameUserTableModel;
     private JPanel friendListPanel;
 
+    //individual pane panel
     private JPanel friendPagePanel;
     private JLabel friendNameLabel;
     private JLabel friendProfileName;
     private JLabel friendLevel;
     private JTable friendGameTable;
     private DefaultTableModel friendGameTableModel;
-
     private JScrollPane friendTableScrollPanel;
     private JButton backToFriends;
+
     private JScrollPane gameTableScrollPanel;
     private GameTableState gameTableState = GameTableState.GAMES;
 
@@ -58,15 +57,16 @@ public class DatabaseFrame{
     private JComboBox<Integer> gameRating;
     private JLabel priceLabel;
     private JLabel gameCategoryLabel;
-
     private JLabel gameNameLabel;
     private JScrollPane gameTableScrollPane;
 
+    //groups bottom panel
     private JPanel addGroupPanel;
     private JTextField addGroupText;
     private JButton addGroupButton;
     private JButton leaveGroup;
 
+    //friends bottom panel
     private JPanel addFriendPanel;
     private JTextField addFriendText;
     private JButton addFriendButton;
@@ -95,10 +95,8 @@ public class DatabaseFrame{
 
     private JButton searchSubmit;
     private Game currentGame;
-
     private User currentUser;
     private JPanel topPanel;
-
     private JPanel card2;
     private JTabbedPane userTabbedPane;
 
@@ -275,21 +273,14 @@ public class DatabaseFrame{
         }
 
         KeyListener enterListener = new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
+            @Override public void keyTyped(KeyEvent e) {}
+            @Override public void keyReleased(KeyEvent e) {}
 
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     login(userNameInput.getText(), String.valueOf(passInput.getPassword()));
                 }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-
             }
         };
 
@@ -305,10 +296,8 @@ public class DatabaseFrame{
 
         loginScreen.add(userLabel);
         loginScreen.add(userNameInput);
-
         loginScreen.add(passLabel);
         loginScreen.add(passInput);
-
         loginScreen.add(loginButton);
         loginScreen.add(newUserButton);
         loginScreen.add(userNotFoundWarning);
@@ -363,13 +352,10 @@ public class DatabaseFrame{
         addGroupPanel.add(addGroupButton);
         addGroupPanel.add(leaveGroup);
 
-
-
         topPanel = new JPanel();
         topPanel.add(userGreeting);
 
         card2.add(topPanel);
-
 
         JScrollPane friendTableScrollPanel = new JScrollPane(friendUserTable);
         userTabbedPane.addTab("My Friends", friendTableScrollPanel);
@@ -385,7 +371,6 @@ public class DatabaseFrame{
 
         card2.setLayout(new BoxLayout(card2, BoxLayout.Y_AXIS));
 
-
         //Profile settings
         JPanel card3 = new JPanel();
         profilePanel = new JPanel();
@@ -395,6 +380,7 @@ public class DatabaseFrame{
 
         JPanel formPanel = new JPanel();
 
+        //account settings
         SpringLayout layout = new SpringLayout();
         formPanel.setLayout(layout);
         JLabel realNameLabel = new JLabel("Real Name:", JLabel.TRAILING);
@@ -470,23 +456,6 @@ public class DatabaseFrame{
             }
         });
 
-        // Double click on Group
-       /* userGroupTable.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent me) {
-                JTable table =(JTable) me.getSource();
-                Point p = me.getPoint();
-                int row = table.rowAtPoint(p);
-                //String rowItem = (String) table.getValueAt(row, 0);
-                if (me.getClickCount() == 2) {
-                    friendUserTable.setVisible(false);
-
-                    updateFriendPagePanel(rowItem);
-                    friendPagePanel.setVisible(true);
-                }
-
-            }
-        });*/
-
         // Double click on a game title
         gameTable.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent me) {
@@ -539,7 +508,6 @@ public class DatabaseFrame{
         for(int r = 0; r < rowData.length; r++) {
             model.addRow(rowData[r]);
         }
-
     }
 
     private void createFriendPagePanel() {
@@ -846,8 +814,6 @@ public class DatabaseFrame{
             CreditCard.setText(currentUser.getCreditCard());
             Phone.setText(currentUser.getPhone());
         });
-
-
     }
 
     private static Image createImage(String path, String description) {
