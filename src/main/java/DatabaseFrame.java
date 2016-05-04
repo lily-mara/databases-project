@@ -35,8 +35,14 @@ public class DatabaseFrame{
     private DefaultTableModel friendUserTableModel;
     private DefaultTableModel gameUserTableModel;
     private JPanel friendListPanel;
+
     private JPanel friendPagePanel;
     private JLabel friendNameLabel;
+    private JLabel friendProfileName;
+    private JLabel friendLevel;
+    private JTable friendGameTable;
+    private DefaultTableModel friendGameTableModel;
+
     private JScrollPane friendTableScrollPanel;
     private JButton backToFriends;
     private JScrollPane gameTableScrollPanel;
@@ -422,11 +428,13 @@ public class DatabaseFrame{
         friendUserTable = new JTable();
         gameUserTable = new JTable();
         userGroupTable = new JTable();
+        friendGameTable = new JTable();
 
         friendUserTableModel = new DefaultTableModel(0, 0);
         gameUserTableModel = new DefaultTableModel(0,0);
         gameTableModel = new DefaultTableModel(0, 0);
         userGroupTableModel = new DefaultTableModel(0, 0);
+        friendGameTableModel = new DefaultTableModel(0,0);
 
         // Double click on a user's friend's name
         friendUserTable.addMouseListener(new MouseAdapter() {
@@ -434,10 +442,11 @@ public class DatabaseFrame{
                 JTable table =(JTable) me.getSource();
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
-                String rowItem = (String) table.getValueAt(row, 0);
+
+                User friend = User.getUserByProfileName(table.getValueAt(row, 1).toString());
                 if (me.getClickCount() == 2) {
                     friendUserTable.setVisible(false);
-                    updateFriendPagePanel(rowItem);
+                    updateFriendPagePanel(friend);
                     friendPagePanel.setVisible(true);
                 }
             }
@@ -459,20 +468,21 @@ public class DatabaseFrame{
         });
 
         // Double click on Group
-        userGroupTable.addMouseListener(new MouseAdapter() {
+       /* userGroupTable.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent me) {
                 JTable table =(JTable) me.getSource();
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
-                String rowItem = (String) table.getValueAt(row, 0);
+                //String rowItem = (String) table.getValueAt(row, 0);
                 if (me.getClickCount() == 2) {
                     friendUserTable.setVisible(false);
 
                     updateFriendPagePanel(rowItem);
                     friendPagePanel.setVisible(true);
                 }
+
             }
-        });
+        });*/
 
         // Double click on a game title
         gameTable.addMouseListener(new MouseAdapter() {
@@ -545,6 +555,13 @@ public class DatabaseFrame{
             friendPagePanel.setVisible(false);
         });
         friendPagePanel.add(backToFriends);
+        friendProfileName = new JLabel();
+        friendPagePanel.add(friendProfileName);
+        friendLevel = new JLabel();
+        friendPagePanel.add(friendLevel);
+
+        friendPagePanel.setLayout(new BoxLayout(friendPagePanel, BoxLayout.Y_AXIS));
+        friendPagePanel.add(new JScrollPane(friendGameTable));
     }
 
     //Navigated to, through store panel
@@ -598,11 +615,17 @@ public class DatabaseFrame{
         gamePagePanel.add(addReviewPanel);
     }
 
-    private void updateFriendPagePanel(String friendName) {
-        friendNameLabel.setText(friendName);
+    private void updateFriendPagePanel(User friend) {
+        friendNameLabel.setText(friend.realName);
         addFriendPanel.setVisible(false);
         userTabbedPane.setVisible(false);
         topPanel.setVisible(false);
+        friendProfileName.setText(friend.profileName);
+        friendLevel.setText("Level " + friend.level);
+        TableInfo t = new TableInfo(friend.games());
+        updateTable(friendGameTable, friendGameTableModel,t.rowData, t.columns);
+        friendGameTable.setVisible(true);
+
         friendPagePanel.setVisible(true);
     }
 
