@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.awt.event.*;
 import java.net.URL;
 import java.util.List;
@@ -268,7 +267,8 @@ public class DatabaseFrame{
         });
 
         try {
-            JLabel logo = new JLabel(new ImageIcon("src" + File.separator + "MistLogo2.png"));
+            Image img = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/mist_logo.png"));
+            JLabel logo = new JLabel(new ImageIcon(img));
             loginScreen.add(logo);
         }catch(Exception E){
             E.printStackTrace();
