@@ -533,9 +533,16 @@ public class DatabaseFrame{
             topPanel.setVisible(true);
             addFriendPanel.setVisible(true);
             friendUserTable.setVisible(true);
+            friendTableScrollPanel.setVisible(true);
             friendPagePanel.setVisible(false);
         });
         friendPagePanel.add(backToFriends);
+        /*
+        DefaultTableModel friendsGamesModel = new DefaultTableModel(0, 0);
+        JTable friendsGamesTable = new JTable();
+        JScrollPane friendsGamesScroll = new JScrollPane(friendsGamesTable);
+        friendPagePanel.add(friendsGamesScroll);
+        */
     }
 
     //Navigated to, through store panel
